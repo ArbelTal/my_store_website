@@ -6,8 +6,8 @@ export default function Footer({ onSelectCategory }) {
     <footer className="relative bg-slate-950 border-t border-cyan-500/15 pt-16 pb-12 overflow-hidden text-slate-400">
       
       {/* Subtle Background Watermark */}
-      <div className="absolute right-0 bottom-0 opacity-5 pointer-events-none select-none max-w-sm hidden md:block">
-        <img src="/logo.png" alt="Footer Logo Watermark" className="w-80 h-auto" />
+      <div className="absolute right-0 bottom-0 opacity-[0.06] pointer-events-none select-none max-w-sm hidden md:block">
+        <img src="/watermark.png" alt="Footer Logo Watermark" className="w-80 h-auto" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

@@ -6,9 +6,9 @@ export default function Hero({ onExploreClick, onRequestCustomClick }) {
   return (
     <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-28 border-b border-cyan-500/10">
       
-      {/* Subtle Background Blueprint Logo Watermark */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 opacity-5 pointer-events-none select-none max-w-xl hidden xl:block">
-        <img src="/logo.png" alt="Revit Watermark" className="w-[550px] h-auto filter blur-[1px]" />
+      {/* Background Blueprint Logo Watermark */}
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 opacity-10 pointer-events-none select-none max-w-xl hidden xl:block z-0">
+        <img src="/watermark.png" alt="Revit Blueprint Watermark" className="w-[580px] h-auto filter drop-shadow-[0_0_25px_rgba(0,163,255,0.4)]" />
       </div>
 
       {/* Hero Glow Effects */}
