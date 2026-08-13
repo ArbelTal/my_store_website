@@ -1,7 +1,7 @@
 import React from 'react';
-import { ShoppingBag, Search, Wrench, Sparkles, Layers, Box, Code, Lock } from 'lucide-react';
+import { ShoppingBag, Search, Wrench, Sparkles, Layers, Box, Code, Lock, Globe } from 'lucide-react';
 
-export default function Header({ cartCount, onOpenCart, activeCategory, onSelectCategory, searchQuery, setSearchQuery, onOpenAdmin }) {
+export default function Header({ lang, setLang, t, cartCount, onOpenCart, activeCategory, onSelectCategory, searchQuery, setSearchQuery, onOpenAdmin }) {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-cyan-500/15 bg-slate-950/80 backdrop-blur-xl transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,7 +34,7 @@ export default function Header({ cartCount, onOpenCart, activeCategory, onSelect
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
-              הכל
+              {t('cat_all')}
             </button>
             <button
               onClick={() => onSelectCategory('plugins')}
@@ -44,7 +44,7 @@ export default function Header({ cartCount, onOpenCart, activeCategory, onSelect
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
-              תוספי Revit
+              {t('cat_plugins')}
             </button>
             <button
               onClick={() => onSelectCategory('pyrevit')}
@@ -54,7 +54,7 @@ export default function Header({ cartCount, onOpenCart, activeCategory, onSelect
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
-              אוטומציות pyRevit
+              {t('cat_pyrevit')}
             </button>
             <button
               onClick={() => onSelectCategory('templates-families')}
@@ -64,7 +64,7 @@ export default function Header({ cartCount, onOpenCart, activeCategory, onSelect
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
-              תבניות ומשפחות
+              {t('cat_templates')}
             </button>
             <button
               onClick={() => onSelectCategory('services')}
@@ -74,18 +74,18 @@ export default function Header({ cartCount, onOpenCart, activeCategory, onSelect
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
-              שירותים מקצועיים
+              {t('cat_services')}
             </button>
           </nav>
 
-          {/* Quick Search & Cart Toggle */}
-          <div className="flex items-center gap-3">
+          {/* Quick Search, Language Switcher & Actions */}
+          <div className="flex items-center gap-2.5">
             
             {/* Search Input */}
             <div className="relative hidden lg:block w-48 xl:w-64">
               <input
                 type="text"
-                placeholder="חפש תוסף או סקריפט..."
+                placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-slate-900/90 border border-slate-800 text-sm text-slate-200 placeholder-slate-500 rounded-full py-2 pr-9 pl-4 focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/60 transition"
@@ -93,11 +93,21 @@ export default function Header({ cartCount, onOpenCart, activeCategory, onSelect
               <Search className="absolute right-3 top-2.5 h-4 w-4 text-slate-400" />
             </div>
 
+            {/* Language Switcher Toggle */}
+            <button
+              onClick={() => setLang(lang === 'he' ? 'en' : 'he')}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 border border-cyan-500/30 text-cyan-300 hover:border-cyan-400 hover:bg-slate-800 text-xs font-mono font-extrabold transition shadow-sm"
+              title={lang === 'he' ? 'Switch to English' : 'עבור לעברית'}
+            >
+              <Globe className="h-4 w-4 text-cyan-400" />
+              <span>{lang === 'he' ? 'EN' : 'עבר'}</span>
+            </button>
+
             {/* Cart Drawer Trigger */}
             <button
               onClick={onOpenCart}
               className="relative flex items-center justify-center p-2.5 rounded-xl bg-slate-900 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-400 transition group"
-              title="עגלת קניות ובקשת הצעת מחיר"
+              title={t('cart')}
             >
               <ShoppingBag className="h-5 w-5 group-hover:scale-110 transition-transform" />
               {cartCount > 0 && (
@@ -111,7 +121,7 @@ export default function Header({ cartCount, onOpenCart, activeCategory, onSelect
             <button
               onClick={onOpenAdmin}
               className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-cyan-300 hover:border-cyan-500/30 transition"
-              title="ניהול חנות (מנהל)"
+              title={t('admin')}
             >
               <Lock className="h-5 w-5" />
             </button>

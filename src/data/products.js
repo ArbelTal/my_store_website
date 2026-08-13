@@ -1,26 +1,32 @@
 export const CATEGORIES = [
-  { id: 'all', name: 'כל המוצרים והשירותים' },
-  { id: 'plugins', name: 'תוספי Revit (Add-ins)', icon: 'Cpu' },
-  { id: 'pyrevit', name: 'אוטומציות pyRevit', icon: 'Code' },
-  { id: 'templates-families', name: 'תבניות ומשפחות', icon: 'Box' },
-  { id: 'services', name: 'שירותים מקצועיים', icon: 'Layers' },
+  { id: 'all', name: 'כל המוצרים והשירותים', nameEn: 'All Products & Services' },
+  { id: 'plugins', name: 'תוספי Revit (Add-ins)', nameEn: 'Revit Add-ins', icon: 'Cpu' },
+  { id: 'pyrevit', name: 'אוטומציות pyRevit', nameEn: 'pyRevit Automations', icon: 'Code' },
+  { id: 'templates-families', name: 'תבניות ומשפחות', nameEn: 'Templates & Families', icon: 'Box' },
+  { id: 'services', name: 'שירותים מקצועיים', nameEn: 'Professional BIM Services', icon: 'Layers' },
 ];
 
 export const PRODUCTS = [
   {
     id: 'sheet-generator-pro',
     title: 'Sheet Generator Pro - מחולל גיליונות אוטומטי',
+    titleEn: 'Sheet Generator Pro - Automated Sheet Creator',
     category: 'plugins',
     categoryName: 'תוספי Revit',
+    categoryNameEn: 'Revit Add-ins',
     badge: 'פופולרי ביותר',
+    badgeEn: 'Most Popular',
     badgeColor: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/40',
     price: 350,
     currency: '₪',
     isService: false,
+    versionText: 'Revit 2022+',
     revitVersions: ['2022', '2023', '2024', '2025'],
     type: 'C# Add-in',
     shortDescription: 'יצירת עשרות גיליונות שרטוט, מיקומם של המבטים (Views) ומספור אוטומטי תוך שניות ספורות בלחיצת כפתור.',
+    shortDescriptionEn: 'Create dozens of drawing sheets, place views automatically, and batch number them in seconds with a single click.',
     description: `תוסף פרימיום עוצמתי לרוויט המיועד למשרדי אדריכלות והנדסה. התוסף חוסך עשרות שעות עבודה ידניות על יצירת גיליונות, סנכרון כותרות, מספור תוכניות ושיבוץ מבטים במיקום מדויק.`,
+    descriptionEn: `Powerful premium Revit add-in designed for architecture and engineering firms. Saves dozens of manual modeling hours creating sheets, syncing titleblocks, and placing views in precise coordinates.`,
     features: [
       'יצירת גיליונות במכה אחת מתוך רשימת Excel או פלטפורמת הרוויט',
       'שיבוץ מבטים (Floor Plans, Sections, 3D) במרכז הגיליון באופן אוטומטי',
@@ -28,7 +34,15 @@ export const PRODUCTS = [
       'תמיכה מלאה ברישום עברית ללא היפוך אותיות',
       'חיסכון ממוצע של 4 שעות לכל פרויקט'
     ],
+    featuresEn: [
+      'Batch sheet creation directly from Excel or Revit list',
+      'Automatic view placement (Floor Plans, Sections, 3D) centered on sheets',
+      'Centralized Title Block parameters synchronization',
+      'Full Hebrew & English text support without letter flipping',
+      'Average time savings of 4 hours per project'
+    ],
     systemRequirements: 'רוויט 2022-2025, Windows 10/11, .NET Framework 4.8+',
+    systemRequirementsEn: 'Revit 2022-2025, Windows 10/11, .NET Framework 4.8+',
     image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80',
     tags: ['Revit Add-in', 'Sheets', 'Automation', 'C#', '2025 Supported'],
     downloadUrl: '#'
@@ -36,24 +50,37 @@ export const PRODUCTS = [
   {
     id: 'parameter-sync-exporter',
     title: 'Parameter Sync & Batch Exporter',
+    titleEn: 'Parameter Sync & Batch Exporter',
     category: 'plugins',
     categoryName: 'תוספי Revit',
+    categoryNameEn: 'Revit Add-ins',
     badge: 'חדש',
+    badgeEn: 'New',
     badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40',
     price: 290,
     currency: '₪',
     isService: false,
+    versionText: 'Revit 2021+',
     revitVersions: ['2021', '2022', '2023', '2024', '2025'],
     type: 'C# Add-in',
     shortDescription: 'ייצוא אצווה (Batch Export) של גיליונות ל-PDF, DWG, IFC ו-NWC בלחיצה אחת עם שמות קבצים מותאמים אישית.',
+    shortDescriptionEn: 'One-click batch export of sheets to PDF, DWG, IFC & NWC with customizable dynamic file naming rules.',
     description: `כלי חובה לכל מנהל BIM ואדריכל. מאפשר לייצא פרויקטים שלמים ל-DWG ו-PDF תוך שמירה על היררכיית שכבות, המרת פונטים, ומניעת טעויות אנוש בשמות הקבצים.`,
+    descriptionEn: `Essential tool for every BIM Manager and Architect. Batch export entire projects to DWG & PDF while maintaining layer standards, font conversion, and avoiding human naming errors.`,
     features: [
       'ייצוא מרוכז ל-PDF / DWG / IFC בלחיצה אחת',
       'מחולל שמות קבצים דינמי מבוסס פרמטרי פרויקט (Project-Number_Sheet-Name_Rev)',
       'הדפסה מרוכזת ללא צורך באישור ידני לכל גיליון',
       'תמיכה בהגדרות ייצוא DWG משרדיות שמורות'
     ],
+    featuresEn: [
+      'One-click batch export to PDF / DWG / IFC',
+      'Dynamic file naming generator based on project parameters (Project-No_Sheet-Name_Rev)',
+      'Unattended batch printing without manual confirmation popups',
+      'Saved office DWG export preset configurations support'
+    ],
     systemRequirements: 'רוויט 2021-2025',
+    systemRequirementsEn: 'Revit 2021-2025',
     image: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=800&q=80',
     tags: ['DWG Export', 'PDF', 'IFC', 'Batch Printing', 'BIM Standard'],
     downloadUrl: '#'
@@ -61,24 +88,37 @@ export const PRODUCTS = [
   {
     id: 'pyrevit-architecture-pack',
     title: 'ערכת סקריפטים pyRevit לאדריכלות',
+    titleEn: 'pyRevit Architecture Script Pack',
     category: 'pyrevit',
     categoryName: 'אוטומציות pyRevit',
+    categoryNameEn: 'pyRevit Automations',
     badge: 'מומלץ',
+    badgeEn: 'Recommended',
     badgeColor: 'bg-amber-500/20 text-amber-400 border-amber-500/40',
     price: 180,
     currency: '₪',
     isService: false,
+    versionText: 'Revit 2021+',
     revitVersions: ['2021', '2022', '2023', '2024', '2025'],
     type: 'pyRevit Toolbar Extension',
     shortDescription: 'חבילת 15+ סקריפטים ב-Python עבור סרגל pyRevit: ניקוי קבצים, חישוב שטחים, מציאת אלמנטים כפולים וסידור מבטים.',
-    description: `חבילת הכלים האולטימטיבית לסרגל הכלים של pyRevit. כוללת סקריפטים מהירים שנכתבו במיוחד לצרכים של משרדי אדריכלות בישראל.`,
+    shortDescriptionEn: 'Suite of 15+ Python scripts for pyRevit toolbar: file cleanup, area calculations, duplicate detector, and view layout tools.',
+    description: `חבילת הכלים האולטימטיבית לסרגל הכלים של pyRevit. כוללת סקריפטים מהירים שנכתבו במיוחד לצרכים של משרדי אדריכלות.`,
+    descriptionEn: `The ultimate toolkit for pyRevit toolbar. Contains high-speed Python scripts written specifically for architectural office workflows.`,
     features: [
       '15 סקריפטים מוכנים להתקנה בלחיצת כפתור בסרגל pyRevit',
       'כלי לחישוב שטחי עיקרי ושירות אוטומטי מתוך דיאגרמות שטחים',
       'כלי Quick Align ליישור טקסטים, מידות ואלמנטים בתוכנית',
       'סקריפט Model Purge מתקדם למחיקת סגנונות קו ופרמטרים מיותרים'
     ],
+    featuresEn: [
+      '15 ready-to-use Python scripts for pyRevit toolbar',
+      'Automated gross vs net area calculator from Area Schemes',
+      'Quick Align tool for aligning text, dimensions and detail elements',
+      'Advanced Model Purge script for purging unused line styles and parameters'
+    ],
     systemRequirements: 'תוכנת pyRevit מותקנת (חינמית), רוויט 2021+',
+    systemRequirementsEn: 'pyRevit extension installed (free), Revit 2021+',
     image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80',
     tags: ['pyRevit', 'Python', 'Scripts', 'Architecture', 'Toolbars'],
     downloadUrl: '#'
@@ -86,24 +126,37 @@ export const PRODUCTS = [
   {
     id: 'pyrevit-finish-schedule',
     title: 'pyRevit Area & Finish Schedule Calculator',
+    titleEn: 'pyRevit Area & Finish Schedule Calculator',
     category: 'pyrevit',
     categoryName: 'אוטומציות pyRevit',
+    categoryNameEn: 'pyRevit Automations',
     badge: 'אוטומציה חכמה',
+    badgeEn: 'Smart Automation',
     badgeColor: 'bg-purple-500/20 text-purple-400 border-purple-500/40',
     price: 150,
     currency: '₪',
     isService: false,
+    versionText: 'Revit 2022+',
     revitVersions: ['2022', '2023', '2024', '2025'],
     type: 'pyRevit Script',
     shortDescription: 'סקריפט אוטומטי המחשב ומעדכן את טבלאות הגמרים (Room Finish Schedule) וחיפויי הקירות מתוך מודל הרוויט.',
+    shortDescriptionEn: 'Automated script that calculates and updates Room Finish Schedules and wall claddings directly from 3D model geometry.',
     description: `נמאס לכם לעדכן ידנית את חומרי הגמר בכל חדר? הסקריפט מזהה את הקירות ההיקפיים והרצפות בכל חדר (Room) ומזין אוטומטית את סוגי החיפוי, הריצוף והתקרה לפרמטרים של החדר.`,
+    descriptionEn: `Tired of updating room finishes manually? This script analyzes perimeter walls and floor boundaries for each Room and automatically writes cladding, flooring and ceiling types into room parameters.`,
     features: [
       'זיהוי אוטומטי של רצפות וציפויי קיר הגובלים בחדר',
       'עדכון פרמטרים של Room Finish בלחיצה אחת',
       'יצירת דוח חריגות וחדרים ללא חומר גמר מוגדר',
       'תמיכה בחישובי פאנלים ופנלים היקפיים'
     ],
+    featuresEn: [
+      'Automatic detection of floor finishes and perimeter wall finishes',
+      'One-click Room Finish parameters update',
+      'Exception report generation for rooms missing finish assignments',
+      'Perimeter skirting and baseboard quantity calculations'
+    ],
     systemRequirements: 'pyRevit v4.8+',
+    systemRequirementsEn: 'pyRevit v4.8+',
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
     tags: ['pyRevit', 'Rooms', 'Finishes', 'Schedules', 'Quantities'],
     downloadUrl: '#'
@@ -111,17 +164,23 @@ export const PRODUCTS = [
   {
     id: 'israeli-standard-template-2025',
     title: 'תבנית רוויט משרדית מלאה 2025 (Israeli Standards)',
+    titleEn: 'Office Revit Master Template 2025 (BIM Standard)',
     category: 'templates-families',
     categoryName: 'תבניות ומשפחות',
+    categoryNameEn: 'Templates & Families',
     badge: 'BIM Standard',
+    badgeEn: 'BIM Standard',
     badgeColor: 'bg-blue-500/20 text-blue-400 border-blue-500/40',
     price: 850,
     currency: '₪',
     isService: false,
+    versionText: 'Revit 2023-2025',
     revitVersions: ['2023', '2024', '2025'],
     type: 'Revit Template (.rte)',
     shortDescription: 'תבנית רוויט מקיפה הכוללת את כל הגדרות השרטוט, השכבות, הטיפוסים והתיוגים לפי תקן BIM ישראלי.',
+    shortDescriptionEn: 'Comprehensive Revit template including all line styles, view templates, standard wall types, and parametric tags.',
     description: `תבנית עבודה משרדית שפותחה על בסיס נסיון של שנים במידול אדריכלי. התבנית כוללת View Templates מוכנים, טיפוסי קירות, תקרות ורצפות תקניים, תיוגים (Tags) בעברית, מקראים וטבלאות כמויות בנויות.`,
+    descriptionEn: `Master office template crafted from years of BIM modeling experience. Includes ready View Templates, standard wall/floor/ceiling types, bilingual parametric tags, legends, and automated quantity schedules.`,
     features: [
       'הגדרות סגנונות קו (Line Styles & Line Weights) מותאמות להדפסה נקייה',
       'תיוגים חכמים (Tags) עבור דלתות, חלונות, חדרים, קירות ופתחי ניקוז',
@@ -129,7 +188,15 @@ export const PRODUCTS = [
       'ספרית חומרים מובנית עם מרקמים ונתוני תרמיים',
       'כולל מדריך וידאו מפורט להטמעה במשרד'
     ],
+    featuresEn: [
+      'Precision Line Styles & Line Weights optimized for clean printing',
+      'Smart Parametric Tags for doors, windows, rooms, walls, and drains',
+      'Pre-configured View Filters for working drawings, permits, and finishes',
+      'Built-in materials library with physical textures and thermal data',
+      'Includes detailed video walkthrough for office deployment'
+    ],
     systemRequirements: 'רוויט 2023-2025',
+    systemRequirementsEn: 'Revit 2023-2025',
     image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80',
     tags: ['Revit Template', 'RTE', 'Israeli Standard', 'BIM', 'View Templates'],
     downloadUrl: '#'
@@ -137,24 +204,37 @@ export const PRODUCTS = [
   {
     id: 'smart-doors-windows-pack',
     title: 'ספריית דלתות וחלונות פרמטריים חכמים',
+    titleEn: 'Smart Parametric Doors & Windows Library',
     category: 'templates-families',
     categoryName: 'תבניות ומשפחות',
+    categoryNameEn: 'Templates & Families',
     badge: '2D/3D Smart',
+    badgeEn: '2D/3D Smart',
     badgeColor: 'bg-pink-500/20 text-pink-400 border-pink-500/40',
     price: 420,
     currency: '₪',
     isService: false,
+    versionText: 'Revit 2021+',
     revitVersions: ['2021', '2022', '2023', '2024', '2025'],
     type: 'Revit Family Pack (.rfa)',
     shortDescription: 'חבילה של 25+ משפחות דלתות וחלונות פרמטריות עם שליטה מלאה בלבנים, הלבשות, פתחי אוורור ותצוגת 2D נקייה.',
-    description: `משפחות רוויט קלות משקל המיועדות לשרטוט אדריכלי מהיר וללא הכבדה על המודל. שליטה מלאה בפרמטרים של רוחב, גובה, סוגי פתיחה, הלבשות ואביזרים.`,
+    shortDescriptionEn: 'Library of 25+ parametric door and window families with complete control over trims, sills, panel options and clean 2D plan graphics.',
+    description: `משפחות רוויט קלות משקל המיועדות לשרטוט אדריכלי מהיר וללא הכבדה על המודל. שליטה מלאה בפרמטרים של רווח, גובה, סוגי פתיחה, הלבשות ואביזרים.`,
+    descriptionEn: `Lightweight Revit families optimized for fast architectural modeling without slowing down your model performance. Full parametric control over dimensions, swing angles, trims and hardware.`,
     features: [
       'תצוגת סימבולים 2D מדויקת בתוכנית (Plan View) ללא קווים כפולים',
       'שליטה בזווית פתיחת הכנף (2D Swing Angle)',
       'הלבשות פנים/חוץ פרמטריות הניתנות להסתרה',
       'פרמטרים מובנים לטבלאות אלומיניום ונגרות'
     ],
+    featuresEn: [
+      'Clean 2D plan graphics without overlapping lines',
+      'Adjustable 2D door swing opening angle parameter',
+      'Parametric interior/exterior trims with visibility controls',
+      'Built-in shared parameters for aluminum and joinery schedules'
+    ],
     systemRequirements: 'רוויט 2021 ומעלה',
+    systemRequirementsEn: 'Revit 2021+',
     image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
     tags: ['Revit Families', 'RFA', 'Doors', 'Windows', 'Parametric'],
     downloadUrl: '#'
@@ -162,17 +242,24 @@ export const PRODUCTS = [
   {
     id: 'custom-template-building-service',
     title: 'בניית תבנית משרדית מותאמת אישית (Custom Template)',
+    titleEn: 'Custom Office Revit Template Service',
     category: 'services',
     categoryName: 'שירותים מקצועיים',
+    categoryNameEn: 'Professional BIM Services',
     badge: 'שירות פרימיום',
+    badgeEn: 'Premium Service',
     badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/50',
     price: null,
     priceLabel: 'לפי הצעת מחיר',
+    priceLabelEn: 'Custom Quote',
     isService: true,
+    versionText: 'Revit 2021-2025',
     revitVersions: ['2021-2025'],
     type: 'שירות ייעוץ ובנייה',
     shortDescription: 'אפיון, תכנון ובניית תבנית רוויט משרדית ייעודית (Template) המותאמת לשיטות העבודה ולסטנדרט של המשרד שלך.',
+    shortDescriptionEn: 'Tailored consulting, setup and creation of a dedicated office Revit template matching your firm graphic standards and workflow.',
     description: `בניית תבנית משרדית היא ההשקעה הרווחית ביותר שמשרד אדריכלות או הנדסה יכול לעשות. תבנית נכונה מונעת טעויות, חוסכת 30%+ מזמן המידול ומבטיחה שפה גראפית אחידה ויוקרתית בכל השרטוטים.`,
+    descriptionEn: `Building a custom office template is the highest-ROI investment an architectural or engineering firm can make. Reduces modeling errors, saves 30%+ modeling time, and guarantees elegant, consistent graphics across all projects.`,
     features: [
       'פגישת אפיון מקיפה לזיהוי הצרכים והשפה הגרפית של המשרד',
       'בניית Title Blocks ממותגים עם לוגו ופרטי המשרד',
@@ -180,7 +267,15 @@ export const PRODUCTS = [
       'בניית טבלאות כמויות וטבלאות גמר מותאמות אחידות',
       'הדרכת צוות המשרד על שימוש נכון בתבנית'
     ],
+    featuresEn: [
+      'Comprehensive workflow audit to define your firm graphic standards',
+      'Custom branded Title Blocks with office logo and metadata',
+      'Standardized materials, layers, line styles, and fonts setup',
+      'Customized quantity takeoff schedules and finish tables',
+      'Hands-on staff training for optimal template usage'
+    ],
     systemRequirements: 'מתאים לכל גודל משרד',
+    systemRequirementsEn: 'Suitable for any office size',
     image: 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?auto=format&fit=crop&w=800&q=80',
     tags: ['BIM Consulting', 'Template Creation', 'Office Standard', 'Workflow'],
     downloadUrl: '#'
@@ -188,24 +283,38 @@ export const PRODUCTS = [
   {
     id: 'bim-modeling-services',
     title: 'שירותי מידול BIM ואדריכלות ברוויט',
+    titleEn: 'BIM & Architectural Modeling Services',
     category: 'services',
     categoryName: 'שירותים מקצועיים',
+    categoryNameEn: 'Professional BIM Services',
     badge: 'מידול מקצועי',
+    badgeEn: 'Pro Modeling',
     badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/50',
     price: null,
     priceLabel: 'לפי הצעת מחיר / פרויקט',
+    priceLabelEn: 'Custom Quote / Project',
     isService: true,
+    versionText: 'Revit 2021-2025',
     revitVersions: ['2021-2025'],
     type: 'שירות מידול',
     shortDescription: 'מידול BIM מדויק ברמת LOD 200 עד LOD 400 עבור פרויקטים אדריכליים, מבני ציבור, מגורים ומערכות.',
+    shortDescriptionEn: 'Precision BIM modeling from LOD 200 to LOD 400 for architectural, residential, public buildings and MEP coordination.',
     description: `שירותי מידול רוויט ברמה הגבוהה ביותר. המרת אוטוקאד / סקיצות / ענני נקודות (Point Cloud) למודל רוויט עשיר בנתונים, מדויק ומוכן לתיאום מערכות וביצוע.`,
+    descriptionEn: `Top-tier Revit modeling services. Convert CAD drawings, sketches, or 3D Point Cloud scans into rich, precise data-driven Revit models ready for coordination and construction documents.`,
     features: [
       'מידול אדריכלי וקונסטרוקטיבי ברמת פירוט גבוהה (LOD 300-400)',
       'המרת תוכניות DWG / סריקות ל-Revit 3D Model',
       'תיאום מערכות וגילוי התנגשויות (Clash Detection)',
       'הפקת תוכניות עבודה, פריסות וחתכים מתוך המודל'
     ],
+    featuresEn: [
+      'High LOD 300-400 architectural and structural modeling',
+      '2D CAD DWG & Point Cloud scan conversion to Revit 3D',
+      'Multi-disciplinary clash detection and coordination',
+      'Construction drawing generation, details and sections extraction'
+    ],
     systemRequirements: 'תמיכה בפורמטי DWG, IFC, Point Cloud, RVT',
+    systemRequirementsEn: 'DWG, IFC, Point Cloud scan & RVT support',
     image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
     tags: ['BIM Modeling', 'LOD 300/400', 'Clash Detection', 'CAD to Revit'],
     downloadUrl: '#'
@@ -213,24 +322,38 @@ export const PRODUCTS = [
   {
     id: 'custom-pyrevit-development-service',
     title: 'פיתוח אוטומציות וסקריפטים pyRevit מותאמים אישית',
+    titleEn: 'Custom pyRevit & Revit API Scripting Service',
     category: 'services',
     categoryName: 'שירותים מקצועיים',
+    categoryNameEn: 'Professional BIM Services',
     badge: 'פיתוח מותאם',
+    badgeEn: 'Custom Dev',
     badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50',
     price: null,
     priceLabel: 'לפי שעות / פיתוח',
+    priceLabelEn: 'Hourly / Fixed Development',
     isService: true,
+    versionText: 'Revit 2021-2025',
     revitVersions: ['2021-2025'],
     type: 'פיתוח תוכנה ב-Python / C#',
     shortDescription: 'פיתוח סקריפטים ייעודיים ל-pyRevit או תוספי C# מורכבים הפותרים צווארי בקבוק ספציפיים בתהליך העבודה שלכם.',
+    shortDescriptionEn: 'Tailored Python pyRevit scripts or complex C# add-ins solving your firm specific workflow bottlenecks.',
     description: `יש לכם פעולה ידנית שחוזרת על עצמה שעות בכל שבוע? אנחנו יכולים להפוך אותה לסקריפט של לחיצת כפתור אחת בסרגל הרוויט שלכם!`,
+    descriptionEn: `Have a tedious manual task repeating every week? We turn it into a single button click on your firm's Revit toolbar!`,
     features: [
       'פיתוח סקריפטים ב-Python / Dynamo / C# לפי מפרט דרישות',
       'אינטגרציה מלאה עם סרגל pyRevit המשרדי',
       'חיבור רוויט לבסיסי נתונים חיצוניים, Excel ו-APIs',
       'תמיכה, עדכונים והדרכה על הכלים שנפתחו'
     ],
+    featuresEn: [
+      'Custom Python / Dynamo / C# scripts according to your specs',
+      'Seamless integration into your office pyRevit toolbar tab',
+      'Revit API connection to external databases, Excel & APIs',
+      'Technical support, updates and team onboarding'
+    ],
     systemRequirements: 'Revit API & pyRevit',
+    systemRequirementsEn: 'Revit API & pyRevit',
     image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',
     tags: ['Custom Code', 'Python', 'Revit API', 'pyRevit', 'Automation'],
     downloadUrl: '#'
@@ -238,26 +361,35 @@ export const PRODUCTS = [
 ];
 
 export const STATS = [
-  { label: 'תוספים ואוטומציות', value: '25+' },
-  { label: 'חיסכון ממוצע בשעות עבודה', value: '40%' },
-  { label: 'משרדים ודיירים מרוצים', value: '80+' },
-  { label: 'תמיכה בגרסאות Revit', value: '2021-2025' }
+  { label: 'תוספים ואוטומציות', labelEn: 'Add-ins & Automations', value: '25+' },
+  { label: 'חיסכון ממוצע בשעות עבודה', labelEn: 'Average Modeling Time Saved', value: '40%' },
+  { label: 'משרדים ודיירים מרוצים', labelEn: 'Satisfied Offices & Users', value: '80+' },
+  { label: 'תמיכה בגרסאות Revit', labelEn: 'Supported Revit Versions', value: '2021-2025' }
 ];
 
 export const TESTIMONIALS = [
   {
     quote: "התוסף Sheet Generator Pro חסך לנו ימים שלמים של עבודה שחורה על הגשת היתרים. בלחיצת כפתור הכל מסודר!",
+    quoteEn: "Sheet Generator Pro saved us days of tedious manual work on permit submissions. One click and everything is generated!",
     name: "אדר' דניאל לוי",
-    role: "מנהל משרד אדריכלים"
+    nameEn: "Arch. Daniel Levi",
+    role: "מנהל משרד אדריכלים",
+    roleEn: "Managing Architect"
   },
   {
     quote: "התבנית המשרדית שנבנתה עבורנו העלתה את רמת השרטוט והגרפיקה של המשרד בכמה רמות מעל המתחרים.",
+    quoteEn: "The custom office template built for us elevated our graphic drawings and drafting standards far above competitors.",
     name: "מיכאל אלוני",
-    role: "מנהל BIM וקונסטרוקציה"
+    nameEn: "Michael Aloni",
+    role: "מנהל BIM וקונסטרוקציה",
+    roleEn: "BIM & Structural Manager"
   },
   {
     quote: "הסקריפטים של pyRevit פשוט משנים את חוקי המשחק. כל מי שממדל ברוויט חייב את הכלים האלה בסרגל שלו.",
+    quoteEn: "The pyRevit scripts are absolute game changers. Anyone modeling in Revit needs these tools on their toolbar.",
     name: "שירה כהן",
-    role: "ממדלת ומעצבת פנים"
+    nameEn: "Shira Cohen",
+    role: "ממדלת ומעצבת פנים",
+    roleEn: "BIM Specialist & Interior Designer"
   }
 ];

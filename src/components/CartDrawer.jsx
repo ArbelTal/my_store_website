@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { X, Trash2, ShoppingBag, Send, MessageSquare, Check, ArrowRight, Plus, Minus, Monitor } from 'lucide-react';
+import { X, Trash2, ShoppingBag, MessageSquare } from 'lucide-react';
 
-export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantity, onRemoveFromCart, onClearCart, settings }) {
+export default function CartDrawer({ lang, t, isOpen, onClose, cartItems, onUpdateQuantity, onRemoveFromCart, onClearCart, settings }) {
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     phone: '',
@@ -10,6 +10,8 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
   });
 
   if (!isOpen) return null;
+
+  const isEn = lang === 'en';
 
   const totalFixedPrice = cartItems.reduce((acc, item) => {
     const isPlugin = !item.isService && item.category === 'plugins';
@@ -25,21 +27,32 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
 
     let itemsList = cartItems
       .map((item, idx) => {
+        const itemTitle = isEn && item.titleEn ? item.titleEn : item.title;
         if (item.isService) {
-          return `${idx + 1}. ${item.title} (הצעת מחיר)`;
+          return `${idx + 1}. ${itemTitle} (${t('customQuote')})`;
         }
         const isPlugin = item.category === 'plugins';
         if (isPlugin) {
           const qty = item.quantity || 1;
           const itemTotal = (item.price || 0) * qty;
-          return `${idx + 1}. ${item.title} - ${qty} עמדות עבודה (${item.price} ₪ x ${qty} = ${itemTotal} ₪)`;
+          return `${idx + 1}. ${itemTitle} - ${qty} ${t('workstations')} (${item.price} ₪ x ${qty} = ${itemTotal} ₪)`;
         } else {
-          return `${idx + 1}. ${item.title} (${item.price} ₪)`;
+          return `${idx + 1}. ${itemTitle} (${item.price} ₪)`;
         }
       })
       .join('\n');
 
-    const message = `שלום! אני מעוניין להזמין את המוצרים/השירותים הבאים מהאתר:
+    const message = isEn ? `Hello! I would like to order the following items from the store:
+
+${itemsList}
+
+${totalFixedPrice > 0 ? `Total Products Subtotal: ${totalFixedPrice} ₪` : ''}
+
+Customer Details:
+Name: ${customerInfo.name || 'N/A'}
+Phone: ${customerInfo.phone || 'N/A'}
+Email: ${customerInfo.email || 'N/A'}
+Notes: ${customerInfo.notes || 'None'}` : `שלום! אני מעוניין להזמין את המוצרים/השירותים הבאים מהאתר:
 
 ${itemsList}
 
@@ -63,8 +76,8 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
     <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/80 backdrop-blur-md animate-fade-in">
       <div className="absolute inset-0" onClick={onClose}></div>
 
-      <div className="fixed inset-y-0 left-0 max-w-full flex pl-0 sm:pl-10">
-        <div className="w-screen max-w-md bg-slate-900 border-r border-cyan-500/20 shadow-2xl flex flex-col">
+      <div className={`fixed inset-y-0 ${isEn ? 'right-0 pr-0 sm:pr-10' : 'left-0 pl-0 sm:pl-10'} max-w-full flex`}>
+        <div className="w-screen max-w-md bg-slate-900 border-x border-cyan-500/20 shadow-2xl flex flex-col">
           
           {/* Cart Drawer Header */}
           <div className="p-6 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
@@ -73,8 +86,8 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
                 <ShoppingBag className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="font-heading font-extrabold text-lg text-white">סל הקניות והצעת מחיר</h2>
-                <span className="text-xs text-slate-400 font-mono">{cartItems.length} מוצרים בסל</span>
+                <h2 className="font-heading font-extrabold text-lg text-white">{t('cartTitle')}</h2>
+                <span className="text-xs text-slate-400 font-mono">{t('cartCountItems', { count: cartItems.length })}</span>
               </div>
             </div>
 
@@ -91,15 +104,15 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
             {cartItems.length === 0 ? (
               <div className="text-center py-16 text-slate-500">
                 <ShoppingBag className="h-12 w-12 mx-auto mb-3 opacity-30 text-cyan-400" />
-                <p className="text-sm font-medium">סל הקניות שלך ריק</p>
-                <p className="text-xs mt-1 text-slate-600">הוסף תוספים, סקריפטים או שירותים מהקטלוג</p>
+                <p className="text-sm font-medium">{t('cartEmpty')}</p>
+                <p className="text-xs mt-1 text-slate-600">{t('cartEmptySub')}</p>
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between text-xs text-slate-400 pb-2 border-b border-slate-800">
-                  <span>פריטים שנבחרו</span>
+                  <span>{t('selectedItems')}</span>
                   <button onClick={onClearCart} className="text-cyan-400 hover:underline text-[11px]">
-                    רוקן סל
+                    {t('clearCart')}
                   </button>
                 </div>
 
@@ -107,21 +120,23 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
                   const isPlugin = !item.isService && item.category === 'plugins';
                   const qty = isPlugin ? (item.quantity || 1) : 1;
                   const itemSubtotal = (item.price || 0) * qty;
+                  const itemTitle = isEn && item.titleEn ? item.titleEn : item.title;
+                  const categoryName = isEn && item.categoryNameEn ? item.categoryNameEn : item.categoryName;
 
                   return (
                     <div key={item.id} className="flex flex-col p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 gap-3">
                       <div className="flex items-center justify-between gap-3">
-                        <img src={item.image} alt={item.title} className="w-12 h-12 rounded-xl object-cover border border-slate-800 shrink-0" />
+                        <img src={item.image} alt={itemTitle} className="w-12 h-12 rounded-xl object-cover border border-slate-800 shrink-0" />
                         
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-xs font-bold text-slate-200 truncate">{item.title}</h4>
-                          <span className="text-[10px] text-cyan-400 font-mono">{item.categoryName}</span>
+                          <h4 className="text-xs font-bold text-slate-200 truncate">{itemTitle}</h4>
+                          <span className="text-[10px] text-cyan-400 font-mono">{categoryName}</span>
                         </div>
 
                         <button
                           onClick={() => onRemoveFromCart(item.id)}
                           className="p-1.5 text-slate-500 hover:text-red-400 transition"
-                          title="הסר מהסל"
+                          title="Remove item"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -131,7 +146,7 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
                       <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between gap-2">
                         {isPlugin ? (
                           <div className="flex items-center gap-2">
-                            <span className="text-[11px] text-slate-400">עמדות:</span>
+                            <span className="text-[11px] text-slate-400">{t('workstations')}:</span>
                             <div className="flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5">
                               <button
                                 onClick={() => onUpdateQuantity(item.id, qty - 1)}
@@ -150,18 +165,18 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
                           </div>
                         ) : (
                           <span className="text-[11px] text-slate-400">
-                            {item.isService ? 'שירות מותאם' : 'פריט יחיד'}
+                            {item.isService ? t('customServiceTag') : t('singleItem')}
                           </span>
                         )}
 
                         <div className="text-right">
                           {item.isService ? (
-                            <span className="text-xs font-bold text-cyan-400">הצעת מחיר</span>
+                            <span className="text-xs font-bold text-cyan-400">{t('customQuote')}</span>
                           ) : (
                             <div className="flex flex-col items-end">
                               <span className="text-xs font-black text-white font-mono">{itemSubtotal} ₪</span>
                               {isPlugin && qty > 1 && (
-                                <span className="text-[9px] text-slate-400 font-mono">({item.price} ₪ לעמדה)</span>
+                                <span className="text-[9px] text-slate-400 font-mono">({item.price} ₪ {t('perWorkstation')})</span>
                               )}
                             </div>
                           )}
@@ -174,11 +189,11 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
 
                 {/* Customer Details Form */}
                 <div className="pt-6 border-t border-slate-800 space-y-3">
-                  <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">פרטי מזמין / פנייה</h4>
+                  <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">{t('customerDetailsHeader')}</h4>
                   
                   <input
                     type="text"
-                    placeholder="שם מלא *"
+                    placeholder={t('fullName')}
                     value={customerInfo.name}
                     onChange={(e) => setCustomerInfo({ ...customerInfo, name: e.target.value })}
                     className="w-full bg-slate-950 border border-slate-800 text-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
@@ -186,7 +201,7 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
 
                   <input
                     type="tel"
-                    placeholder="מספר טלפון / WhatsApp *"
+                    placeholder={t('phoneWhatsapp')}
                     value={customerInfo.phone}
                     onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
                     className="w-full bg-slate-950 border border-slate-800 text-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
@@ -194,7 +209,7 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
 
                   <input
                     type="email"
-                    placeholder="כתובת אימייל"
+                    placeholder={t('emailAddress')}
                     value={customerInfo.email}
                     onChange={(e) => setCustomerInfo({ ...customerInfo, email: e.target.value })}
                     className="w-full bg-slate-950 border border-slate-800 text-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
@@ -211,12 +226,12 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
               {/* Total Summary */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs text-slate-400">
-                  <span>סה"כ לתשלום (עבור מוצרים):</span>
+                  <span>{t('totalForProducts')}</span>
                   <span className="font-mono text-white text-base font-black">{totalFixedPrice} ₪</span>
                 </div>
                 {hasServices && (
                   <div className="text-[11px] text-cyan-400">
-                    * הסל כולל שירותים לפי הצעת מחיר מותאמת
+                    {t('includesCustomServices')}
                   </div>
                 )}
               </div>
@@ -227,7 +242,7 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
                 className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black text-sm shadow-xl shadow-emerald-500/20 transition"
               >
                 <MessageSquare className="h-4 w-4" />
-                <span>שלח הזמנה / פנייה ב-WhatsApp</span>
+                <span>{t('sendOrderWhatsApp')}</span>
               </button>
 
             </div>

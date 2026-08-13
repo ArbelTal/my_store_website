@@ -1,18 +1,21 @@
 import React from 'react';
-import { ShoppingBag, Eye, Check, Star, Download, Cpu, Code, Layers, Box } from 'lucide-react';
+import { ShoppingBag, Eye, Check } from 'lucide-react';
 
-export default function ProductCard({ product, onQuickView, onAddToCart, isInCart }) {
+export default function ProductCard({ lang, t, product, onQuickView, onAddToCart, isInCart }) {
+  const isEn = lang === 'en';
+
+  const title = isEn && product.titleEn ? product.titleEn : product.title;
+  const categoryName = isEn && product.categoryNameEn ? product.categoryNameEn : product.categoryName;
+  const badge = isEn && product.badgeEn ? product.badgeEn : product.badge;
+  const shortDescription = isEn && product.shortDescriptionEn ? product.shortDescriptionEn : product.shortDescription;
+  const priceLabel = isEn && product.priceLabelEn ? product.priceLabelEn : (product.priceLabel || t('customQuote'));
+
   const {
-    title,
-    categoryName,
-    badge,
     badgeColor,
     price,
     currency,
-    priceLabel,
     isService,
     revitVersions,
-    shortDescription,
     image,
     tags
   } = product;
@@ -78,7 +81,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart, isInCar
           <div>
             {isService ? (
               <div className="text-xs font-bold text-cyan-400 bg-cyan-950/50 px-2 py-1 rounded border border-cyan-900/50">
-                {priceLabel || 'הצעת מחיר'}
+                {priceLabel}
               </div>
             ) : (
               <div className="flex items-baseline gap-1">
@@ -95,7 +98,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart, isInCar
             <button
               onClick={() => onQuickView(product)}
               className="p-2.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition"
-              title="פרטים מלאים והתקנה"
+              title={t('quickView')}
             >
               <Eye className="h-4 w-4" />
             </button>
@@ -112,12 +115,12 @@ export default function ProductCard({ product, onQuickView, onAddToCart, isInCar
               {isInCart ? (
                 <>
                   <Check className="h-4 w-4" />
-                  <span>בסל הקניות</span>
+                  <span>{t('inCart')}</span>
                 </>
               ) : (
                 <>
                   <ShoppingBag className="h-4 w-4" />
-                  <span>{isService ? 'הוסף לבקשה' : 'הוסף לסל'}</span>
+                  <span>{isService ? t('requestQuote') : t('addToCart')}</span>
                 </>
               )}
             </button>

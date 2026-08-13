@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Wrench, Send, CheckCircle, Code, Layers, Box, FileSpreadsheet, MessageSquare } from 'lucide-react';
+import { Wrench, Code, Layers, Box, FileSpreadsheet, MessageSquare } from 'lucide-react';
 
-export default function CustomServiceForm({ settings }) {
+export default function CustomServiceForm({ lang, t, settings }) {
   const [serviceType, setServiceType] = useState('pyrevit');
   const [formData, setFormData] = useState({
     name: '',
@@ -10,24 +10,25 @@ export default function CustomServiceForm({ settings }) {
     revitVersion: '2025',
     details: '',
   });
-  const [submitted, setSubmitted] = useState(false);
+
+  const isEn = lang === 'en';
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
     const serviceNames = {
-      pyrevit: 'פיתוח אוטומציה / סקריפט pyRevit מותאם אישית',
-      template: 'בניית תבנית משרדית (Revit Template)',
-      families: 'פיתוח ספרית משפחות פרמטריות (Families)',
-      bim: 'שירותי מידול BIM / המרת CAD ל-Revit'
+      pyrevit: isEn ? 'Custom pyRevit / Python Automation Development' : 'פיתוח אוטומציה / סקריפט pyRevit מותאם אישית',
+      template: isEn ? 'Custom Office Revit Template' : 'בניית תבנית משרדית (Revit Template)',
+      families: isEn ? 'Parametric Family Library Development' : 'פיתוח ספרית משפחות פרמטריות (Families)',
+      bim: isEn ? 'BIM Modeling & CAD Conversion Services' : 'שירותי מידול BIM / המרת CAD ל-Revit'
     };
 
-    const message = `שלום! אני מעוניין בהצעת מחיר עבור: ${serviceNames[serviceType]}
-שם: ${formData.name}
-טלפון: ${formData.phone}
-אימייל: ${formData.email}
-גרסת רוויט: ${formData.revitVersion}
-פירוט הפרויקט:
+    const message = `Hello! I would like a custom quote for: ${serviceNames[serviceType]}
+Name: ${formData.name}
+Phone: ${formData.phone}
+Email: ${formData.email}
+Revit Version: ${formData.revitVersion}
+Project Details:
 ${formData.details}`;
 
     const encodedMessage = encodeURIComponent(message);
@@ -37,7 +38,6 @@ ${formData.details}`;
       : `https://wa.me/?text=${encodedMessage}`;
     
     window.open(whatsappUrl, '_blank');
-    setSubmitted(true);
   };
 
   return (
@@ -52,13 +52,13 @@ ${formData.details}`;
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-400 text-xs font-bold mb-3">
             <Wrench className="h-3.5 w-3.5" />
-            <span>התאמה אישית מלאה</span>
+            <span>{isEn ? 'Custom Development' : 'התאמה אישית מלאה'}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            זקוק לפיתוח אוטומציה, תבנית משרדית או משפחה מותאמת?
+            {t('customFormTitle')}
           </h2>
           <p className="text-slate-300 text-base max-w-2xl mx-auto mt-3">
-            מלא את הפרטים ונחזור אליך תוך מספר שעות עם אפיון טכני והצעת מחיר מדויקת
+            {t('customFormSubtitle')}
           </p>
         </div>
 
@@ -70,7 +70,7 @@ ${formData.details}`;
             {/* Step 1: Select Service Type */}
             <div>
               <label className="block text-sm font-bold text-slate-300 mb-3">
-                1. בחר את סוג השירות המבוקש:
+                {t('serviceType')}
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                 
@@ -84,7 +84,7 @@ ${formData.details}`;
                   }`}
                 >
                   <Code className="h-7 w-7 text-cyan-400 mb-2" />
-                  <span className="text-xs font-bold">אוטומציית pyRevit</span>
+                  <span className="text-xs font-bold">{isEn ? 'pyRevit Automation' : 'אוטומציית pyRevit'}</span>
                 </button>
 
                 <button
@@ -97,7 +97,7 @@ ${formData.details}`;
                   }`}
                 >
                   <FileSpreadsheet className="h-7 w-7 text-cyan-400 mb-2" />
-                  <span className="text-xs font-bold">תבנית משרדית</span>
+                  <span className="text-xs font-bold">{isEn ? 'Office Template' : 'תבנית משרדית'}</span>
                 </button>
 
                 <button
@@ -110,7 +110,7 @@ ${formData.details}`;
                   }`}
                 >
                   <Box className="h-7 w-7 text-cyan-400 mb-2" />
-                  <span className="text-xs font-bold">משפחות Revit</span>
+                  <span className="text-xs font-bold">{isEn ? 'Revit Families' : 'משפחות Revit'}</span>
                 </button>
 
                 <button
@@ -123,7 +123,7 @@ ${formData.details}`;
                   }`}
                 >
                   <Layers className="h-7 w-7 text-cyan-400 mb-2" />
-                  <span className="text-xs font-bold">מידול BIM</span>
+                  <span className="text-xs font-bold">{isEn ? 'BIM Modeling' : 'מידול BIM'}</span>
                 </button>
 
               </div>
@@ -132,11 +132,11 @@ ${formData.details}`;
             {/* Step 2: Contact Info */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1.5">שם מלא *</label>
+                <label className="block text-xs font-bold text-slate-300 mb-1.5">{t('fullName')}</label>
                 <input
                   type="text"
                   required
-                  placeholder="ישראל ישראלי"
+                  placeholder="John Doe"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-cyan-500 transition"
@@ -144,11 +144,11 @@ ${formData.details}`;
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1.5">טלפון / WhatsApp *</label>
+                <label className="block text-xs font-bold text-slate-300 mb-1.5">{t('phoneWhatsapp')}</label>
                 <input
                   type="tel"
                   required
-                  placeholder="050-0000000"
+                  placeholder="+1-555-0000"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-cyan-500 transition"
@@ -156,7 +156,7 @@ ${formData.details}`;
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1.5">אימייל</label>
+                <label className="block text-xs font-bold text-slate-300 mb-1.5">{t('emailAddress')}</label>
                 <input
                   type="email"
                   placeholder="name@example.com"
@@ -170,9 +170,9 @@ ${formData.details}`;
             {/* Step 3: Project Details */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-bold text-slate-300">תאור הפרויקט / הדרישות *</label>
+                <label className="block text-xs font-bold text-slate-300">{isEn ? 'Project Details & Specifications *' : 'תאור הפרויקט / הדרישות *'}</label>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-400">גרסת Revit:</span>
+                  <span className="text-xs text-slate-400">Revit Version:</span>
                   <select
                     value={formData.revitVersion}
                     onChange={(e) => setFormData({ ...formData, revitVersion: e.target.value })}
@@ -190,7 +190,7 @@ ${formData.details}`;
               <textarea
                 required
                 rows={4}
-                placeholder="תאר את הפעולה הידנית שברצונך לאוטומט, סוג התבנית המבוקשת או מפרט המשפחה..."
+                placeholder={isEn ? "Describe your manual task to automate, requested template specifications, or family details..." : "תאר את הפעולה הידנית שברצונך לאוטומט, סוג התבנית המבוקשת או מפרט המשפחה..."}
                 value={formData.details}
                 onChange={(e) => setFormData({ ...formData, details: e.target.value })}
                 className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-3.5 text-sm focus:outline-none focus:border-cyan-500 transition"
@@ -200,7 +200,7 @@ ${formData.details}`;
             {/* Submit Button */}
             <div className="flex items-center justify-between pt-2">
               <span className="text-xs text-slate-400">
-                * הפנייה תשלח ישירות ל-WhatsApp לקבלת מענה מהיר
+                {isEn ? '* Inquiry will be sent directly via WhatsApp for quick response' : '* הפנייה תשלח ישירות ל-WhatsApp לקבלת מענה מהיר'}
               </span>
               
               <button
@@ -208,7 +208,7 @@ ${formData.details}`;
                 className="flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold text-sm shadow-xl shadow-cyan-500/20 transition transform hover:-translate-y-0.5"
               >
                 <MessageSquare className="h-4 w-4" />
-                <span>שלח לבקשת הצעת מחיר ב-WhatsApp</span>
+                <span>{t('submitRequestWhatsApp')}</span>
               </button>
             </div>
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X, CheckCircle2, ShieldCheck, Download, ShoppingBag, Cpu, Sparkles, AlertCircle, FileCode, Plus, Minus, Monitor } from 'lucide-react';
+import { X, CheckCircle2, ShieldCheck, ShoppingBag, FileCode, Plus, Minus, Monitor } from 'lucide-react';
 
-export default function ProductModal({ product, onClose, onAddToCart, isInCart }) {
+export default function ProductModal({ lang, t, product, onClose, onAddToCart, isInCart }) {
   const [workstations, setWorkstations] = useState(1);
 
   useEffect(() => {
@@ -10,21 +10,24 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
 
   if (!product) return null;
 
+  const isEn = lang === 'en';
+
+  const title = isEn && product.titleEn ? product.titleEn : product.title;
+  const categoryName = isEn && product.categoryNameEn ? product.categoryNameEn : product.categoryName;
+  const badge = isEn && product.badgeEn ? product.badgeEn : product.badge;
+  const description = isEn && product.descriptionEn ? product.descriptionEn : product.description;
+  const features = isEn && product.featuresEn ? product.featuresEn : product.features;
+  const systemRequirements = isEn && product.systemRequirementsEn ? product.systemRequirementsEn : product.systemRequirements;
+  const priceLabel = isEn && product.priceLabelEn ? product.priceLabelEn : (product.priceLabel || t('customQuote'));
+
   const {
     category,
-    categoryName,
-    title,
-    badge,
     badgeColor,
     price,
     currency,
-    priceLabel,
     isService,
     revitVersions,
     type,
-    description,
-    features,
-    systemRequirements,
     image,
     tags
   } = product;
@@ -38,7 +41,7 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
       onClick={onClose}
     >
       
-      {/* Modal Card Box - Fits screen width & height seamlessly */}
+      {/* Modal Card Box */}
       <div 
         className="relative w-full max-w-4xl bg-slate-900 border border-cyan-500/30 rounded-3xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[92vh]"
         onClick={(e) => e.stopPropagation()}
@@ -82,13 +85,13 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
             {/* Price & Workstation Control Block */}
             <div className="p-4 rounded-2xl bg-slate-900/90 border border-cyan-500/20 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-slate-400 font-medium">מחיר המוצר:</span>
+                <span className="text-xs text-slate-400 font-medium">{t('singleWorkstationPrice')}</span>
                 {isService ? (
-                  <span className="text-sm font-bold text-cyan-400">{priceLabel || 'הצעת מחיר'}</span>
+                  <span className="text-sm font-bold text-cyan-400">{priceLabel}</span>
                 ) : (
                   <div className="flex items-baseline gap-1">
                     <span className="text-2xl font-black text-white font-mono">{price}</span>
-                    <span className="text-xs font-bold text-slate-400">{currency} {supportsWorkstations ? '/ עמדה' : ''}</span>
+                    <span className="text-xs font-bold text-slate-400">{currency} {supportsWorkstations ? t('perWorkstation') : ''}</span>
                   </div>
                 )}
               </div>
@@ -98,7 +101,7 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
                 <div className="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5 text-xs text-slate-300 font-bold">
                     <Monitor className="h-4 w-4 text-cyan-400" />
-                    <span>עמדות:</span>
+                    <span>{t('workstations')}:</span>
                   </div>
 
                   <div className="flex items-center bg-slate-950 border border-slate-800 rounded-xl p-1">
@@ -124,7 +127,7 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
               {/* Total Subtotal (Plugins Only) */}
               {supportsWorkstations && (
                 <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between text-xs">
-                  <span className="text-slate-400">סה"כ לתשלום:</span>
+                  <span className="text-slate-400">{t('totalForWorkstations')}</span>
                   <span className="font-black text-cyan-300 font-mono text-base">{(price || 0) * workstations} {currency}</span>
                 </div>
               )}
@@ -146,12 +149,12 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
                 <ShoppingBag className="h-4 w-4" />
                 <span>
                   {isInCart 
-                    ? 'כבר בסל הקניות' 
+                    ? t('alreadyInCart') 
                     : isService 
-                      ? 'הוסף לבקשת הצעת מחיר' 
+                      ? t('requestQuote') 
                       : supportsWorkstations 
-                        ? `הוסף לסל (${workstations} עמדות)` 
-                        : 'הוסף לסל הקניות'}
+                        ? t('addToCartPlural', { count: workstations }) 
+                        : t('addToCart')}
                 </span>
               </button>
 
@@ -159,7 +162,7 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
                 onClick={onClose}
                 className="w-full py-2.5 rounded-xl bg-slate-900 text-slate-400 text-xs font-bold hover:bg-slate-800 hover:text-white transition"
               >
-                סגורחלון
+                {t('closeWindow')}
               </button>
             </div>
 
@@ -177,14 +180,14 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
               <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-xs">
                 <div className="flex items-center gap-1.5">
                   <FileCode className="h-4 w-4 text-cyan-400" />
-                  <span className="text-slate-400">סוג:</span>
+                  <span className="text-slate-400">{t('fileType')}</span>
                   <span className="font-bold text-slate-200 font-mono">{type}</span>
                 </div>
 
                 <div className="h-3 w-px bg-slate-800 hidden sm:block"></div>
 
                 <div className="flex items-center gap-1.5">
-                  <span className="text-slate-400">תמיכה בגרסאות:</span>
+                  <span className="text-slate-400">{t('supportedVersions')}</span>
                   <span className="font-mono font-bold text-xs text-cyan-300 bg-cyan-950/80 px-2.5 py-1 rounded-md border border-cyan-800/80">
                     {product.versionText ? product.versionText : (Array.isArray(revitVersions) && revitVersions.length > 0 ? `Revit ${revitVersions[0]}+` : `Revit ${revitVersions || '2021-2025'}`)}
                   </span>
@@ -194,7 +197,7 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
 
             {/* Description */}
             <div>
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">תיאור המוצר</h3>
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{t('extendedDescription')}</h3>
               <p className="text-slate-200 text-xs leading-relaxed whitespace-pre-line">
                 {description}
               </p>
@@ -203,8 +206,7 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
             {/* Key Features Checklist */}
             <div>
               <h3 className="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>יכולות מרכזיות</span>
+                <span>{t('keyFeatures')}</span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {features.map((feat, idx) => (
@@ -219,7 +221,7 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
             {/* System Requirements Footer Note */}
             <div className="p-3 rounded-xl bg-cyan-950/20 border border-cyan-500/20 text-[11px] text-slate-300 flex items-center gap-2 mt-auto">
               <ShieldCheck className="h-4 w-4 text-cyan-400 shrink-0" />
-              <span>{systemRequirements} • תמיכה טכנית בהתקנה כלולה</span>
+              <span>{systemRequirements} • {t('techSupportIncluded')}</span>
             </div>
 
           </div>

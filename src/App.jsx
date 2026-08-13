@@ -10,8 +10,38 @@ import AboutServices from './components/AboutServices';
 import Footer from './components/Footer';
 import AdminPanel from './components/AdminPanel';
 import { PRODUCTS as INITIAL_PRODUCTS } from './data/products';
+import { translations } from './i18n/translations';
 
 export default function App() {
+  // Language state ('he' | 'en')
+  const [lang, setLang] = useState(() => {
+    try {
+      return localStorage.getItem('revit_store_lang') || 'he';
+    } catch (e) {
+      return 'he';
+    }
+  });
+
+  // Sync document text direction (RTL for Hebrew, LTR for English)
+  useEffect(() => {
+    document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+    document.documentElement.lang = lang;
+    try {
+      localStorage.setItem('revit_store_lang', lang);
+    } catch (e) {
+      console.error('Failed to save language preference', e);
+    }
+  }, [lang]);
+
+  // Translation lookup helper
+  const t = (key, params = {}) => {
+    let text = translations[lang]?.[key] || translations.he?.[key] || key;
+    Object.keys(params).forEach((paramKey) => {
+      text = text.replace(`{{${paramKey}}}`, params[paramKey]);
+    });
+    return text;
+  };
+
   // Load products from localStorage or default
   const [products, setProducts] = useState(() => {
     try {
@@ -64,16 +94,20 @@ export default function App() {
         activeCategory === 'all' || product.category === activeCategory;
 
       const q = searchQuery.toLowerCase().trim();
+      const titleText = (lang === 'en' && product.titleEn ? product.titleEn : product.title).toLowerCase();
+      const descText = (lang === 'en' && product.shortDescriptionEn ? product.shortDescriptionEn : product.shortDescription).toLowerCase();
+      const categoryText = (lang === 'en' && product.categoryNameEn ? product.categoryNameEn : product.categoryName).toLowerCase();
+
       const matchesSearch =
         !q ||
-        product.title.toLowerCase().includes(q) ||
-        product.shortDescription.toLowerCase().includes(q) ||
-        (product.categoryName && product.categoryName.toLowerCase().includes(q)) ||
-        (product.tags && product.tags.some((t) => t.toLowerCase().includes(q)));
+        titleText.includes(q) ||
+        descText.includes(q) ||
+        categoryText.includes(q) ||
+        (product.tags && product.tags.some((tKey) => tKey.toLowerCase().includes(q)));
 
       return matchesCategory && matchesSearch;
     });
-  }, [products, activeCategory, searchQuery]);
+  }, [products, activeCategory, searchQuery, lang]);
 
   // Cart helper actions
   const handleAddToCart = (product, quantity = 1) => {
@@ -143,6 +177,9 @@ export default function App() {
       
       {/* Top Header */}
       <Header
+        lang={lang}
+        setLang={setLang}
+        t={t}
         cartCount={totalCartItemCount}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenAdmin={() => setIsAdminOpen(true)}
@@ -157,6 +194,8 @@ export default function App() {
 
       {/* Hero Banner */}
       <Hero
+        lang={lang}
+        t={t}
         onExploreClick={scrollToCatalog}
         onRequestCustomClick={scrollToCustomForm}
       />
@@ -164,6 +203,8 @@ export default function App() {
       {/* Category Filter & Catalog Grid */}
       <main className="flex-1 pb-20">
         <CategoryFilter
+          lang={lang}
+          t={t}
           activeCategory={activeCategory}
           onSelectCategory={setActiveCategory}
           searchQuery={searchQuery}
@@ -175,7 +216,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {filteredProducts.length === 0 ? (
             <div className="text-center py-20 bg-slate-900/50 rounded-3xl border border-slate-800">
-              <p className="text-slate-400 text-base font-medium">לא נמצאו תוצאות המתאימות לחיפוש שלך.</p>
+              <p className="text-slate-400 text-base font-medium">{t('noResults')}</p>
               <button
                 onClick={() => {
                   setActiveCategory('all');
@@ -183,7 +224,7 @@ export default function App() {
                 }}
                 className="mt-4 text-xs font-bold text-cyan-400 hover:underline"
               >
-                אפס את כל המסננים
+                {t('resetFilters')}
               </button>
             </div>
           ) : (
@@ -191,6 +232,8 @@ export default function App() {
               {filteredProducts.map((product) => (
                 <ProductCard
                   key={product.id}
+                  lang={lang}
+                  t={t}
                   product={product}
                   onQuickView={(p) => setSelectedProductModal(p)}
                   onAddToCart={(p) => handleAddToCart(p, 1)}
@@ -202,14 +245,16 @@ export default function App() {
         </div>
 
         {/* Custom Service Request Form */}
-        <CustomServiceForm settings={settings} />
+        <CustomServiceForm lang={lang} t={t} settings={settings} />
 
         {/* About & Testimonials */}
-        <AboutServices />
+        <AboutServices lang={lang} t={t} />
       </main>
 
       {/* Footer */}
       <Footer
+        lang={lang}
+        t={t}
         onSelectCategory={(cat) => {
           setActiveCategory(cat);
           scrollToCatalog();
@@ -218,6 +263,8 @@ export default function App() {
 
       {/* Interactive Detail Modal */}
       <ProductModal
+        lang={lang}
+        t={t}
         product={selectedProductModal}
         onClose={() => setSelectedProductModal(null)}
         onAddToCart={handleAddToCart}
@@ -226,6 +273,8 @@ export default function App() {
 
       {/* Cart Drawer */}
       <CartDrawer
+        lang={lang}
+        t={t}
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         cartItems={cartItems}
@@ -237,6 +286,8 @@ export default function App() {
 
       {/* Admin Management Panel */}
       <AdminPanel
+        lang={lang}
+        t={t}
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
         products={products}
