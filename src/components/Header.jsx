@@ -1,14 +1,16 @@
 import React from 'react';
-import { ShoppingBag, Search, Wrench, Sparkles, Layers, Box, Code, Lock, Globe } from 'lucide-react';
+import { ShoppingBag, Search, Lock, Globe } from 'lucide-react';
 
 export default function Header({ lang, setLang, t, cartCount, onOpenCart, activeCategory, onSelectCategory, searchQuery, setSearchQuery, onOpenAdmin }) {
+  const isRtl = lang === 'he';
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-cyan-500/15 bg-slate-950/80 backdrop-blur-xl transition-all">
+    <header className="sticky top-0 z-40 w-full border-b border-cyan-500/15 bg-slate-950/85 backdrop-blur-xl transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-20 gap-4">
           
           {/* Brand Logo & Name */}
-          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => onSelectCategory('all')}>
+          <div className="flex items-center gap-3 cursor-pointer group shrink-0" onClick={() => onSelectCategory('all')}>
             <img 
               src="/logo.png" 
               alt="Revit Tools Logo" 
@@ -18,17 +20,17 @@ export default function Header({ lang, setLang, t, cartCount, onOpenCart, active
               <span className="font-heading font-extrabold text-lg text-white tracking-wide leading-tight group-hover:text-cyan-300 transition-colors">
                 REVIT<span className="text-cyan-400">TOOLS</span>
               </span>
-              <span className="text-[10px] text-cyan-300/70 font-mono tracking-wider">
+              <span className="text-[10px] text-cyan-300/70 font-mono tracking-wider whitespace-nowrap">
                 PLUGINS & BIM SERVICES
               </span>
             </div>
           </div>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 bg-slate-900/60 p-1.5 rounded-full border border-slate-800">
+          <nav className="hidden lg:flex items-center gap-1 bg-slate-900/60 p-1.5 rounded-full border border-slate-800 shrink-0">
             <button
               onClick={() => onSelectCategory('all')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${
                 activeCategory === 'all'
                   ? 'bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/25'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -38,7 +40,7 @@ export default function Header({ lang, setLang, t, cartCount, onOpenCart, active
             </button>
             <button
               onClick={() => onSelectCategory('plugins')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${
                 activeCategory === 'plugins'
                   ? 'bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/25'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -48,7 +50,7 @@ export default function Header({ lang, setLang, t, cartCount, onOpenCart, active
             </button>
             <button
               onClick={() => onSelectCategory('pyrevit')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${
                 activeCategory === 'pyrevit'
                   ? 'bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/25'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -58,7 +60,7 @@ export default function Header({ lang, setLang, t, cartCount, onOpenCart, active
             </button>
             <button
               onClick={() => onSelectCategory('templates-families')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${
                 activeCategory === 'templates-families'
                   ? 'bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/25'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -68,7 +70,7 @@ export default function Header({ lang, setLang, t, cartCount, onOpenCart, active
             </button>
             <button
               onClick={() => onSelectCategory('services')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${
                 activeCategory === 'services'
                   ? 'bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/25'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -79,18 +81,20 @@ export default function Header({ lang, setLang, t, cartCount, onOpenCart, active
           </nav>
 
           {/* Quick Search, Language Switcher & Actions */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
             {/* Search Input */}
-            <div className="relative hidden lg:block w-48 xl:w-64">
+            <div className="relative hidden xl:block w-48 xl:w-56">
               <input
                 type="text"
                 placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-900/90 border border-slate-800 text-sm text-slate-200 placeholder-slate-500 rounded-full py-2 pr-9 pl-4 focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/60 transition"
+                className={`w-full bg-slate-900/90 border border-slate-800 text-xs text-slate-200 placeholder-slate-500 rounded-full py-2 ${
+                  isRtl ? 'pr-9 pl-4' : 'pl-9 pr-4'
+                } focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/60 transition`}
               />
-              <Search className="absolute right-3 top-2.5 h-4 w-4 text-slate-400" />
+              <Search className={`absolute ${isRtl ? 'right-3' : 'left-3'} top-2.5 h-4 w-4 text-slate-400`} />
             </div>
 
             {/* Language Switcher Toggle */}
@@ -100,7 +104,7 @@ export default function Header({ lang, setLang, t, cartCount, onOpenCart, active
               title={lang === 'he' ? 'Switch to English' : 'עבור לעברית'}
             >
               <Globe className="h-4 w-4 text-cyan-400" />
-              <span>{lang === 'he' ? 'EN' : 'עבר'}</span>
+              <span>{lang === 'he' ? 'עב' : 'EN'}</span>
             </button>
 
             {/* Cart Drawer Trigger */}
