@@ -18,12 +18,6 @@ export default function Hero({ onExploreClick, onRequestCustomClick }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-4xl text-right">
           
-          {/* Top Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-xs font-semibold mb-6 shadow-sm">
-            <Sparkles className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
-            <span>תומך בגרסאות Revit 2021-2025 & pyRevit</span>
-          </div>
-
           {/* Main Title */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-none mb-6">
             חנות התוספים והאוטומציות <br />
