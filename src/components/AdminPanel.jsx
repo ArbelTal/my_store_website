@@ -63,6 +63,26 @@ export default function AdminPanel({
     setTimeout(() => setNotification(''), 3000);
   };
 
+  const handleImageFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      showToast('נא לבחור קובץ תמונה תקין');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setFormData((prev) => ({
+        ...prev,
+        image: event.target.result
+      }));
+      showToast('התמונה מהמחשב נטענה בהצלחה!');
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleLogin = (e) => {
     e.preventDefault();
     if (pinInput === (settings.adminPin || '1234')) {
@@ -488,14 +508,54 @@ export default function AdminPanel({
                     ></textarea>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-slate-300 mb-1">קישור לתמונה / נתיב תמונה ב-public</label>
-                    <input
-                      type="text"
-                      value={formData.image}
-                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                      className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
-                    />
+                  {/* Image Selector: File Upload + URL input + Live Preview */}
+                  <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+                    <label className="block text-xs font-bold text-slate-300">תמונת המוצר / שירות *</label>
+                    
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                      {/* File Upload Input Button */}
+                      <label className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 hover:text-white text-xs font-bold cursor-pointer transition shadow-sm">
+                        <Upload className="h-4 w-4 text-cyan-400" />
+                        <span>בחר תמונה מהמחשב</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageFileChange}
+                          className="hidden"
+                        />
+                      </label>
+
+                      <span className="text-xs text-slate-500 text-center font-bold">או</span>
+
+                      {/* URL input */}
+                      <div className="flex-[2]">
+                        <input
+                          type="text"
+                          placeholder="הדבק קישור URL / נתיב תמונה"
+                          value={formData.image}
+                          onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                          className="w-full bg-slate-900 border border-slate-800 text-slate-100 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-cyan-500"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Image Preview Box */}
+                    {formData.image && (
+                      <div className="flex items-center gap-3 pt-2 border-t border-slate-800/80">
+                        <span className="text-[11px] text-slate-400 font-bold">תצוגה מקדימה:</span>
+                        <div className="relative group">
+                          <img
+                            src={formData.image}
+                            alt="תצוגה מקדימה"
+                            className="w-16 h-16 rounded-xl object-cover border border-cyan-500/40 shadow-md bg-slate-900"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80';
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="pt-4 flex items-center gap-3">
