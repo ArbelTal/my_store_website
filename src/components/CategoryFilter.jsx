@@ -21,7 +21,7 @@ export default function CategoryFilter({ activeCategory, onSelectCategory, searc
             <span>קטלוג תוספים, אוטומציות ושירותים</span>
           </h2>
           <p className="text-slate-400 text-sm mt-1">
-            בחר קטגוריה או חפש לפי תכונה, גרסת רוויט או סוג כלי
+            חפש לפי תכונה, גרסת רוויט או סוג כלי
           </p>
         </div>
 
@@ -36,29 +36,6 @@ export default function CategoryFilter({ activeCategory, onSelectCategory, searc
           />
           <Search className="absolute right-3.5 top-3.5 h-4 w-4 text-slate-400" />
         </div>
-      </div>
-
-      {/* Category Pills */}
-      <div className="flex flex-wrap gap-2.5 pb-2">
-        {CATEGORIES.map((cat) => {
-          const IconComponent = cat.icon ? ICON_MAP[cat.icon] : null;
-          const isActive = activeCategory === cat.id;
-
-          return (
-            <button
-              key={cat.id}
-              onClick={() => onSelectCategory(cat.id)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 ${
-                isActive
-                  ? 'bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/25 scale-[1.02]'
-                  : 'bg-slate-900/80 border border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white hover:border-slate-700'
-              }`}
-            >
-              {IconComponent && <IconComponent className={`h-4 w-4 ${isActive ? 'text-slate-950' : 'text-cyan-400'}`} />}
-              <span>{cat.name}</span>
-            </button>
-          );
-        })}
       </div>
 
       {/* Results Count indicator */}
