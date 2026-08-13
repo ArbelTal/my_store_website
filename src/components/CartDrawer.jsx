@@ -12,7 +12,8 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
   if (!isOpen) return null;
 
   const totalFixedPrice = cartItems.reduce((acc, item) => {
-    const qty = item.quantity || 1;
+    const isPlugin = !item.isService && item.category === 'plugins';
+    const qty = isPlugin ? (item.quantity || 1) : 1;
     return acc + ((item.price || 0) * qty);
   }, 0);
 
@@ -27,9 +28,14 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
         if (item.isService) {
           return `${idx + 1}. ${item.title} (הצעת מחיר)`;
         }
-        const qty = item.quantity || 1;
-        const itemTotal = (item.price || 0) * qty;
-        return `${idx + 1}. ${item.title} - ${qty} עמדות עבודה (${item.price} ₪ x ${qty} = ${itemTotal} ₪)`;
+        const isPlugin = item.category === 'plugins';
+        if (isPlugin) {
+          const qty = item.quantity || 1;
+          const itemTotal = (item.price || 0) * qty;
+          return `${idx + 1}. ${item.title} - ${qty} עמדות עבודה (${item.price} ₪ x ${qty} = ${itemTotal} ₪)`;
+        } else {
+          return `${idx + 1}. ${item.title} (${item.price} ₪)`;
+        }
       })
       .join('\n');
 
@@ -98,7 +104,8 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
                 </div>
 
                 {cartItems.map((item) => {
-                  const qty = item.quantity || 1;
+                  const isPlugin = !item.isService && item.category === 'plugins';
+                  const qty = isPlugin ? (item.quantity || 1) : 1;
                   const itemSubtotal = (item.price || 0) * qty;
 
                   return (
@@ -120,9 +127,9 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
                         </button>
                       </div>
 
-                      {/* Workstation Quantity Control & Price Subtotal */}
+                      {/* Price & Workstation Controls (ONLY FOR REVIT PLUGINS) */}
                       <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between gap-2">
-                        {!item.isService ? (
+                        {isPlugin ? (
                           <div className="flex items-center gap-2">
                             <span className="text-[11px] text-slate-400">עמדות:</span>
                             <div className="flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5">
@@ -142,7 +149,9 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
                             </div>
                           </div>
                         ) : (
-                          <span className="text-[11px] text-cyan-400 font-bold">שירות מותאם</span>
+                          <span className="text-[11px] text-slate-400">
+                            {item.isService ? 'שירות מותאם' : 'פריט יחיד'}
+                          </span>
                         )}
 
                         <div className="text-right">
@@ -151,7 +160,7 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
                           ) : (
                             <div className="flex flex-col items-end">
                               <span className="text-xs font-black text-white font-mono">{itemSubtotal} ₪</span>
-                              {qty > 1 && (
+                              {isPlugin && qty > 1 && (
                                 <span className="text-[9px] text-slate-400 font-mono">({item.price} ₪ לעמדה)</span>
                               )}
                             </div>

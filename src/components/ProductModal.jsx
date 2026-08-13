@@ -11,8 +11,9 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
   if (!product) return null;
 
   const {
-    title,
+    category,
     categoryName,
+    title,
     badge,
     badgeColor,
     price,
@@ -27,6 +28,9 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
     image,
     tags
   } = product;
+
+  // Workstations option is ONLY for Revit Plugins (category === 'plugins')
+  const supportsWorkstations = !isService && category === 'plugins';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-950/80 backdrop-blur-md animate-fade-in">
@@ -79,7 +83,7 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
               ) : (
                 <div className="flex items-baseline gap-1">
                   <span className="text-3xl font-black text-white font-mono">{price}</span>
-                  <span className="text-sm font-bold text-slate-400">{currency} / עמדה</span>
+                  <span className="text-sm font-bold text-slate-400">{currency} {supportsWorkstations ? '/ עמדה' : ''}</span>
                 </div>
               )}
             </div>
@@ -119,8 +123,8 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
             </div>
           </div>
 
-          {/* Workstation Quantity Selector */}
-          {!isService && (
+          {/* Workstation Quantity Selector - ONLY FOR REVIT PLUGINS */}
+          {supportsWorkstations && (
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-cyan-950/30 border border-cyan-500/20">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
@@ -211,7 +215,7 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
             </button>
             <button
               onClick={() => {
-                onAddToCart(product, workstations);
+                onAddToCart(product, supportsWorkstations ? workstations : 1);
                 onClose();
               }}
               className={`w-1/2 sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs font-bold shadow-lg transition ${
@@ -221,7 +225,15 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
               }`}
             >
               <ShoppingBag className="h-4 w-4" />
-              <span>{isService ? 'הוסף לבקשת הצעת מחיר' : `הוסף לסל (${workstations} עמדות)`}</span>
+              <span>
+                {isInCart 
+                  ? 'כבר בסל הקניות' 
+                  : isService 
+                    ? 'הוסף לבקשת הצעת מחיר' 
+                    : supportsWorkstations 
+                      ? `הוסף לסל (${workstations} עמדות)` 
+                      : 'הוסף לסל הקניות'}
+              </span>
             </button>
           </div>
         </div>
