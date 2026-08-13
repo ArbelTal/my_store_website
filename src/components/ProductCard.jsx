@@ -36,8 +36,8 @@ export default function ProductCard({ product, onQuickView, onAddToCart, isInCar
               {badge}
             </span>
           )}
-          <span className="px-2.5 py-1 rounded-md text-[11px] font-mono font-semibold bg-slate-950/80 border border-slate-800 text-slate-300 backdrop-blur-md">
-            Revit {revitVersions?.[0] ? `${revitVersions[0]}+` : '2025'}
+          <span className="px-2.5 py-1 rounded-md text-[11px] font-mono font-semibold bg-slate-950/80 border border-slate-800 text-cyan-300 backdrop-blur-md">
+            {product.versionText ? product.versionText : (Array.isArray(revitVersions) && revitVersions.length > 0 ? `Revit ${revitVersions[0]}+` : `Revit ${revitVersions || '2025'}`)}
           </span>
         </div>
 

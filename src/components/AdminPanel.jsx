@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, Plus, Trash2, Edit3, Save, Lock, Settings, Download, Upload, Check, RefreshCw, Key, ShieldCheck, PhoneCall } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Plus, Trash2, Edit3, Save, Lock, Settings, Download, Upload, Check, RefreshCw, Key, ShieldCheck, PhoneCall, Layers } from 'lucide-react';
 import { CATEGORIES } from '../data/products';
 
 export default function AdminPanel({
@@ -18,6 +18,15 @@ export default function AdminPanel({
   const [authError, setAuthError] = useState('');
   const [activeTab, setActiveTab] = useState('products'); // 'products' | 'add' | 'settings' | 'backup'
 
+  // Always force authentication when the panel opens
+  useEffect(() => {
+    if (!isOpen) {
+      setIsAuthenticated(false);
+      setPinInput('');
+      setAuthError('');
+    }
+  }, [isOpen]);
+
   // Form state for creating/editing product
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
@@ -30,6 +39,7 @@ export default function AdminPanel({
     currency: '₪',
     priceLabel: 'לפי הצעת מחיר',
     isService: false,
+    versionText: 'Revit 2022+',
     revitVersions: ['2022', '2023', '2024', '2025'],
     type: 'C# Add-in',
     shortDescription: '',
@@ -75,6 +85,7 @@ export default function AdminPanel({
       currency: '₪',
       priceLabel: 'לפי הצעת מחיר',
       isService: false,
+      versionText: 'Revit 2022+',
       revitVersions: ['2022', '2023', '2024', '2025'],
       type: 'C# Add-in',
       shortDescription: '',
@@ -88,8 +99,11 @@ export default function AdminPanel({
 
   const startEdit = (product) => {
     setEditingId(product.id);
+    const initialVersionText = product.versionText || (Array.isArray(product.revitVersions) && product.revitVersions.length > 0 ? `Revit ${product.revitVersions[0]}+` : 'Revit 2022+');
+    
     setFormData({
       ...product,
+      versionText: initialVersionText,
       features: Array.isArray(product.features) ? product.features.join('\n') : product.features,
       tags: Array.isArray(product.tags) ? product.tags.join(', ') : product.tags,
       revitVersions: product.revitVersions || ['2022', '2023', '2024', '2025']
@@ -163,12 +177,15 @@ export default function AdminPanel({
             </div>
             <div>
               <h2 className="font-heading font-extrabold text-xl text-white">פאנל ניהול החנות (Admin Console)</h2>
-              <span className="text-xs text-cyan-400 font-mono">ניהול קטלוג, מוצרים, הגדרות ו-WhatsApp</span>
+              <span className="text-xs text-cyan-400 font-mono">ניהול קטלוג, מוצרים, גרסאות Revit ו-WhatsApp</span>
             </div>
           </div>
 
           <button
-            onClick={onClose}
+            onClick={() => {
+              setIsAuthenticated(false);
+              onClose();
+            }}
             className="p-2 rounded-full bg-slate-900 text-slate-400 hover:text-white transition"
           >
             <X className="h-5 w-5" />
@@ -197,6 +214,8 @@ export default function AdminPanel({
             <form onSubmit={handleLogin} className="space-y-4">
               <input
                 type="password"
+                required
+                autoFocus
                 placeholder="קוד גישה (ברירת מחדל: 1234)"
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value)}
@@ -256,6 +275,16 @@ export default function AdminPanel({
                 <Download className="h-3.5 w-3.5" />
                 <span>גיבוי ואיפוס</span>
               </button>
+
+              <button
+                onClick={() => {
+                  setIsAuthenticated(false);
+                  onClose();
+                }}
+                className="mr-auto px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold hover:bg-red-500/20 transition"
+              >
+                יציאה מניהול
+              </button>
             </div>
 
             {/* Tab 1: Products Table */}
@@ -271,6 +300,9 @@ export default function AdminPanel({
                             <h4 className="font-bold text-sm text-white">{item.title}</h4>
                             <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800">
                               {item.categoryName}
+                            </span>
+                            <span className="text-[10px] font-mono text-slate-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                              {item.versionText || (Array.isArray(item.revitVersions) ? `Revit ${item.revitVersions[0]}+` : `Revit ${item.revitVersions}`)}
                             </span>
                           </div>
                           <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">{item.shortDescription}</p>
@@ -340,6 +372,40 @@ export default function AdminPanel({
                           <option key={c.id} value={c.id}>{c.name}</option>
                         ))}
                       </select>
+                    </div>
+                  </div>
+
+                  {/* Revit Supported Versions Edit Section */}
+                  <div className="p-3.5 rounded-xl bg-slate-950/80 border border-cyan-500/20 space-y-2">
+                    <label className="block text-xs font-bold text-cyan-400">
+                      גרסת תמיכה ברוויט (Revit Version Tag) *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="למשל: Revit 2022+ או Revit 2021-2025"
+                      value={formData.versionText}
+                      onChange={(e) => setFormData({ ...formData, versionText: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-800 text-white font-mono font-bold text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    />
+
+                    {/* Quick Preset Buttons */}
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                      <span className="text-[11px] text-slate-400">בחירה מהירה:</span>
+                      {['Revit 2021+', 'Revit 2022+', 'Revit 2023+', 'Revit 2024+', 'Revit 2025', 'Revit 2021-2025'].map((preset) => (
+                        <button
+                          key={preset}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, versionText: preset })}
+                          className={`text-[10px] font-mono px-2 py-1 rounded-lg border transition ${
+                            formData.versionText === preset
+                              ? 'bg-cyan-500 text-slate-950 font-bold border-cyan-400'
+                              : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700'
+                          }`}
+                        >
+                          {preset}
+                        </button>
+                      ))}
                     </div>
                   </div>
 
