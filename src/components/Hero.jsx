@@ -8,8 +8,8 @@ export default function Hero({ lang, t, onExploreClick, onRequestCustomClick }) 
     <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-28 border-b border-cyan-500/10">
       
       {/* Background Blueprint Logo Watermark */}
-      <div className={`absolute ${isRtl ? 'left-0' : 'right-0'} top-1/2 -translate-y-1/2 opacity-10 pointer-events-none select-none max-w-xl hidden xl:block z-0`}>
-        <img src="/watermark.png" alt="Revit Blueprint Watermark" className="w-[580px] h-auto filter drop-shadow-[0_0_25px_rgba(0,163,255,0.4)]" />
+      <div className={`absolute ${isRtl ? 'left-0' : 'right-0'} top-1/2 -translate-y-1/2 opacity-20 pointer-events-none select-none max-w-xl hidden xl:block z-0 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_85%)]`}>
+        <img src="/watermark.png" alt="Revit Blueprint Watermark" className="w-[580px] h-auto filter drop-shadow-[0_0_30px_rgba(0,163,255,0.5)] blur-[1px]" />
       </div>
 
       {/* Hero Glow Effects */}
