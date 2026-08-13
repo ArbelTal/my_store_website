@@ -8,24 +8,19 @@ export default function Header({ cartCount, onOpenCart, activeCategory, onSelect
         <div className="flex items-center justify-between h-20">
           
           {/* Brand Logo & Name */}
-          <div className="flex items-center gap-3">
-            <div className="relative group cursor-pointer" onClick={() => onSelectCategory('all')}>
-              <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl blur opacity-30 group-hover:opacity-75 transition duration-300"></div>
-              <div className="relative flex items-center gap-3 bg-slate-900 border border-cyan-500/30 px-3.5 py-2 rounded-xl">
-                <img 
-                  src="/logo.png" 
-                  alt="Revit Tools Logo" 
-                  className="h-9 w-auto object-contain drop-shadow-[0_0_8px_rgba(0,163,255,0.5)]" 
-                />
-                <div className="flex flex-col">
-                  <span className="font-heading font-extrabold text-lg text-white tracking-wide leading-tight">
-                    REVIT<span className="text-cyan-400">TOOLS</span>
-                  </span>
-                  <span className="text-[10px] text-cyan-300/70 font-mono tracking-wider">
-                    PLUGINS & BIM SERVICES
-                  </span>
-                </div>
-              </div>
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => onSelectCategory('all')}>
+            <img 
+              src="/logo.png" 
+              alt="Revit Tools Logo" 
+              className="h-10 w-auto object-contain drop-shadow-[0_0_12px_rgba(0,163,255,0.4)] group-hover:scale-105 transition-transform" 
+            />
+            <div className="flex flex-col">
+              <span className="font-heading font-extrabold text-lg text-white tracking-wide leading-tight group-hover:text-cyan-300 transition-colors">
+                REVIT<span className="text-cyan-400">TOOLS</span>
+              </span>
+              <span className="text-[10px] text-cyan-300/70 font-mono tracking-wider">
+                PLUGINS & BIM SERVICES
+              </span>
             </div>
           </div>
 
