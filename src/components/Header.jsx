@@ -121,15 +121,6 @@ export default function Header({ cartCount, onOpenCart, activeCategory, onSelect
               <Lock className="h-5 w-5" />
             </button>
 
-            {/* Contact CTA */}
-            <a
-              href="#custom-service"
-              className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-sm transition shadow-lg shadow-cyan-500/20"
-            >
-              <Wrench className="h-4 w-4" />
-              <span>הזמן פיתוח</span>
-            </a>
-
           </div>
 
         </div>

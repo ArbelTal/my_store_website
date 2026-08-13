@@ -41,7 +41,7 @@ export default function Hero({ onExploreClick, onRequestCustomClick }) {
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-wrap gap-4 items-center mb-12">
+            <div className="flex flex-wrap gap-4 items-center">
               <button
                 onClick={onExploreClick}
                 className="flex items-center gap-3 px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold text-base shadow-xl shadow-cyan-500/25 hover:shadow-cyan-500/40 transition transform hover:-translate-y-0.5 group"
@@ -59,22 +59,6 @@ export default function Hero({ onExploreClick, onRequestCustomClick }) {
               </button>
             </div>
 
-            {/* Features Checkpoints */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-slate-800/80">
-              <div className="flex items-center gap-2.5 text-sm text-slate-300">
-                <CheckCircle className="h-4 w-4 text-cyan-400 shrink-0" />
-                <span>התקנה מהירה ברוויט</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm text-slate-300">
-                <CheckCircle className="h-4 w-4 text-cyan-400 shrink-0" />
-                <span>תמיכה בעברית מלאה</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm text-slate-300">
-                <ShieldCheck className="h-4 w-4 text-cyan-400 shrink-0" />
-                <span>תקן BIM ישראלי מותאם</span>
-              </div>
-            </div>
-
           </div>
 
           {/* Graphic Showcase Card */}
@@ -88,19 +72,14 @@ export default function Hero({ onExploreClick, onRequestCustomClick }) {
               <div className="relative bg-slate-900/90 border border-cyan-500/30 rounded-2xl p-6 shadow-2xl backdrop-blur-xl">
                 
                 {/* Blueprint Card Header */}
-                <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  </div>
+                <div className="flex items-center justify-end pb-4 border-b border-slate-800 mb-6">
                   <span className="text-xs font-mono text-cyan-400 bg-cyan-950/80 px-2.5 py-1 rounded-md border border-cyan-800">
                     Revit API & pyRevit Engine
                   </span>
                 </div>
 
                 {/* Main Logo & Graphic Feature */}
-                <div className="flex flex-col items-center text-center p-6 bg-slate-950/80 rounded-xl border border-slate-800/80 mb-6">
+                <div className="flex flex-col items-center text-center p-6 bg-slate-950/80 rounded-xl border border-slate-800/80">
                   <img 
                     src="/logo.png" 
                     alt="Logo Feature" 
@@ -112,20 +91,6 @@ export default function Hero({ onExploreClick, onRequestCustomClick }) {
                   <p className="text-xs text-slate-400">
                     פיתוח תוספים ב-C#, אוטומציות pyRevit ומידול BIM מתקדם
                   </p>
-                </div>
-
-                {/* Stats Grid */}
-                <div className="grid grid-cols-2 gap-3">
-                  {STATS.map((stat, idx) => (
-                    <div key={idx} className="bg-slate-950/60 p-3 rounded-xl border border-slate-800/60 text-right">
-                      <div className="text-xl font-extrabold text-cyan-400 font-mono">
-                        {stat.value}
-                      </div>
-                      <div className="text-xs text-slate-400 mt-0.5">
-                        {stat.label}
-                      </div>
-                    </div>
-                  ))}
                 </div>
 
               </div>
