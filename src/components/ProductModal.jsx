@@ -184,24 +184,10 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
                 <div className="h-3 w-px bg-slate-800 hidden sm:block"></div>
 
                 <div className="flex items-center gap-1.5">
-                  <span className="text-slate-400">Revit:</span>
-                  <div className="flex items-center gap-1">
-                    {['2021', '2022', '2023', '2024', '2025'].map((ver) => {
-                      const isSupported = revitVersions?.includes(ver) || revitVersions?.includes('2021-2025');
-                      return (
-                        <span
-                          key={ver}
-                          className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold ${
-                            isSupported
-                              ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                              : 'bg-slate-900 text-slate-600 border border-slate-800'
-                          }`}
-                        >
-                          {ver}
-                        </span>
-                      );
-                    })}
-                  </div>
+                  <span className="text-slate-400">תמיכה בגרסאות:</span>
+                  <span className="font-mono font-bold text-xs text-cyan-300 bg-cyan-950/80 px-2.5 py-1 rounded-md border border-cyan-800/80">
+                    {product.versionText ? product.versionText : (Array.isArray(revitVersions) && revitVersions.length > 0 ? `Revit ${revitVersions[0]}+` : `Revit ${revitVersions || '2021-2025'}`)}
+                  </span>
                 </div>
               </div>
             </div>
