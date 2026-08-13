@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { X, Trash2, ShoppingBag, Send, MessageSquare, Check, ArrowRight } from 'lucide-react';
+import { X, Trash2, ShoppingBag, Send, MessageSquare, Check, ArrowRight, Plus, Minus, Monitor } from 'lucide-react';
 
-export default function CartDrawer({ isOpen, onClose, cartItems, onRemoveFromCart, onClearCart, settings }) {
+export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantity, onRemoveFromCart, onClearCart, settings }) {
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     phone: '',
@@ -12,7 +12,8 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onRemoveFromCar
   if (!isOpen) return null;
 
   const totalFixedPrice = cartItems.reduce((acc, item) => {
-    return acc + (item.price || 0);
+    const qty = item.quantity || 1;
+    return acc + ((item.price || 0) * qty);
   }, 0);
 
   const hasServices = cartItems.some((item) => item.isService);
@@ -22,14 +23,21 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onRemoveFromCar
     if (cartItems.length === 0) return;
 
     let itemsList = cartItems
-      .map((item, idx) => `${idx + 1}. ${item.title} (${item.isService ? 'הצעת מחיר' : item.price + ' ₪'})`)
+      .map((item, idx) => {
+        if (item.isService) {
+          return `${idx + 1}. ${item.title} (הצעת מחיר)`;
+        }
+        const qty = item.quantity || 1;
+        const itemTotal = (item.price || 0) * qty;
+        return `${idx + 1}. ${item.title} - ${qty} עמדות עבודה (${item.price} ₪ x ${qty} = ${itemTotal} ₪)`;
+      })
       .join('\n');
 
     const message = `שלום! אני מעוניין להזמין את המוצרים/השירותים הבאים מהאתר:
 
 ${itemsList}
 
-${totalFixedPrice > 0 ? `סה"כ מחיר מוצרים מוגדרים: ${totalFixedPrice} ₪` : ''}
+${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixedPrice} ₪` : ''}
 
 פרטי מזמין:
 שם: ${customerInfo.name || 'לא צוין'}
@@ -60,7 +68,7 @@ ${totalFixedPrice > 0 ? `סה"כ מחיר מוצרים מוגדרים: ${totalFi
               </div>
               <div>
                 <h2 className="font-heading font-extrabold text-lg text-white">סל הקניות והצעת מחיר</h2>
-                <span className="text-xs text-slate-400 font-mono">{cartItems.length} פריטים נבחרו</span>
+                <span className="text-xs text-slate-400 font-mono">{cartItems.length} מוצרים בסל</span>
               </div>
             </div>
 
@@ -89,32 +97,71 @@ ${totalFixedPrice > 0 ? `סה"כ מחיר מוצרים מוגדרים: ${totalFi
                   </button>
                 </div>
 
-                {cartItems.map((item) => (
-                  <div key={item.id} className="flex items-center justify-between p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80 gap-3">
-                    <img src={item.image} alt={item.title} className="w-12 h-12 rounded-lg object-cover border border-slate-800" />
-                    
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-bold text-slate-200 truncate">{item.title}</h4>
-                      <span className="text-[10px] text-cyan-400 font-mono">{item.categoryName}</span>
-                    </div>
+                {cartItems.map((item) => {
+                  const qty = item.quantity || 1;
+                  const itemSubtotal = (item.price || 0) * qty;
 
-                    <div className="text-right shrink-0">
-                      {item.isService ? (
-                        <span className="text-[11px] font-bold text-cyan-400">הצעת מחיר</span>
-                      ) : (
-                        <span className="text-xs font-bold text-white font-mono">{item.price} ₪</span>
-                      )}
-                      
-                      <button
-                        onClick={() => onRemoveFromCart(item.id)}
-                        className="block mt-1 text-slate-500 hover:text-red-400 transition"
-                        title="הסר מהסל"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
+                  return (
+                    <div key={item.id} className="flex flex-col p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 gap-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <img src={item.image} alt={item.title} className="w-12 h-12 rounded-xl object-cover border border-slate-800 shrink-0" />
+                        
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-xs font-bold text-slate-200 truncate">{item.title}</h4>
+                          <span className="text-[10px] text-cyan-400 font-mono">{item.categoryName}</span>
+                        </div>
+
+                        <button
+                          onClick={() => onRemoveFromCart(item.id)}
+                          className="p-1.5 text-slate-500 hover:text-red-400 transition"
+                          title="הסר מהסל"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+
+                      {/* Workstation Quantity Control & Price Subtotal */}
+                      <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between gap-2">
+                        {!item.isService ? (
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] text-slate-400">עמדות:</span>
+                            <div className="flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5">
+                              <button
+                                onClick={() => onUpdateQuantity(item.id, qty - 1)}
+                                className="w-6 h-6 rounded bg-slate-950 text-slate-300 hover:text-white flex items-center justify-center text-xs font-bold transition"
+                              >
+                                -
+                              </button>
+                              <span className="w-7 text-center text-xs font-mono font-bold text-cyan-300">{qty}</span>
+                              <button
+                                onClick={() => onUpdateQuantity(item.id, qty + 1)}
+                                className="w-6 h-6 rounded bg-slate-950 text-slate-300 hover:text-white flex items-center justify-center text-xs font-bold transition"
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <span className="text-[11px] text-cyan-400 font-bold">שירות מותאם</span>
+                        )}
+
+                        <div className="text-right">
+                          {item.isService ? (
+                            <span className="text-xs font-bold text-cyan-400">הצעת מחיר</span>
+                          ) : (
+                            <div className="flex flex-col items-end">
+                              <span className="text-xs font-black text-white font-mono">{itemSubtotal} ₪</span>
+                              {qty > 1 && (
+                                <span className="text-[9px] text-slate-400 font-mono">({item.price} ₪ לעמדה)</span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
 
                 {/* Customer Details Form */}
                 <div className="pt-6 border-t border-slate-800 space-y-3">
@@ -155,8 +202,8 @@ ${totalFixedPrice > 0 ? `סה"כ מחיר מוצרים מוגדרים: ${totalFi
               {/* Total Summary */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs text-slate-400">
-                  <span>סה"כ מוצרים מוגדרים:</span>
-                  <span className="font-mono text-white font-bold">{totalFixedPrice} ₪</span>
+                  <span>סה"כ לתשלום (עבור מוצרים):</span>
+                  <span className="font-mono text-white text-base font-black">{totalFixedPrice} ₪</span>
                 </div>
                 {hasServices && (
                   <div className="text-[11px] text-cyan-400">

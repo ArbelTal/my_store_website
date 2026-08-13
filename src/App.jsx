@@ -76,10 +76,27 @@ export default function App() {
   }, [products, activeCategory, searchQuery]);
 
   // Cart helper actions
-  const handleAddToCart = (product) => {
-    if (!cartItems.some((item) => item.id === product.id)) {
-      setCartItems([...cartItems, product]);
+  const handleAddToCart = (product, quantity = 1) => {
+    const existingIndex = cartItems.findIndex((item) => item.id === product.id);
+    if (existingIndex > -1) {
+      const updated = [...cartItems];
+      updated[existingIndex].quantity = (updated[existingIndex].quantity || 1) + quantity;
+      setCartItems(updated);
+    } else {
+      setCartItems([...cartItems, { ...product, quantity: quantity || 1 }]);
     }
+  };
+
+  const handleUpdateQuantity = (productId, newQuantity) => {
+    if (newQuantity < 1) {
+      handleRemoveFromCart(productId);
+      return;
+    }
+    setCartItems(
+      cartItems.map((item) =>
+        item.id === productId ? { ...item, quantity: newQuantity } : item
+      )
+    );
   };
 
   const handleRemoveFromCart = (productId) => {
@@ -119,12 +136,14 @@ export default function App() {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const totalCartItemCount = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950">
       
       {/* Top Header */}
       <Header
-        cartCount={cartItems.length}
+        cartCount={totalCartItemCount}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenAdmin={() => setIsAdminOpen(true)}
         activeCategory={activeCategory}
@@ -174,7 +193,7 @@ export default function App() {
                   key={product.id}
                   product={product}
                   onQuickView={(p) => setSelectedProductModal(p)}
-                  onAddToCart={handleAddToCart}
+                  onAddToCart={(p) => handleAddToCart(p, 1)}
                   isInCart={cartItems.some((item) => item.id === product.id)}
                 />
               ))}
@@ -210,6 +229,7 @@ export default function App() {
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         cartItems={cartItems}
+        onUpdateQuantity={handleUpdateQuantity}
         onRemoveFromCart={handleRemoveFromCart}
         onClearCart={handleClearCart}
         settings={settings}

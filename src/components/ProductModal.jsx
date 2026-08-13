@@ -1,7 +1,13 @@
-import React from 'react';
-import { X, CheckCircle2, ShieldCheck, Download, ShoppingBag, Cpu, Sparkles, AlertCircle, FileCode } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, CheckCircle2, ShieldCheck, Download, ShoppingBag, Cpu, Sparkles, AlertCircle, FileCode, Plus, Minus, Monitor } from 'lucide-react';
 
 export default function ProductModal({ product, onClose, onAddToCart, isInCart }) {
+  const [workstations, setWorkstations] = useState(1);
+
+  useEffect(() => {
+    setWorkstations(1);
+  }, [product]);
+
   if (!product) return null;
 
   const {
@@ -73,7 +79,7 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
               ) : (
                 <div className="flex items-baseline gap-1">
                   <span className="text-3xl font-black text-white font-mono">{price}</span>
-                  <span className="text-sm font-bold text-slate-400">{currency}</span>
+                  <span className="text-sm font-bold text-slate-400">{currency} / עמדה</span>
                 </div>
               )}
             </div>
@@ -112,6 +118,46 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
               </div>
             </div>
           </div>
+
+          {/* Workstation Quantity Selector */}
+          {!isService && (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-cyan-950/30 border border-cyan-500/20">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+                  <Monitor className="h-5 w-5" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-white">כמות עמדות עבודה (רישיונות):</h4>
+                  <span className="text-[11px] text-slate-400">מחיר לעמדה בודדת: {price} {currency}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 self-end sm:self-center">
+                <div className="flex items-center bg-slate-950 border border-slate-800 rounded-xl p-1">
+                  <button 
+                    type="button"
+                    onClick={() => setWorkstations(Math.max(1, workstations - 1))}
+                    className="w-8 h-8 rounded-lg bg-slate-900 text-slate-300 hover:text-white font-bold hover:bg-slate-800 flex items-center justify-center transition"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
+                  <span className="w-12 text-center font-mono font-bold text-cyan-300 text-base">{workstations}</span>
+                  <button 
+                    type="button"
+                    onClick={() => setWorkstations(workstations + 1)}
+                    className="w-8 h-8 rounded-lg bg-slate-900 text-slate-300 hover:text-white font-bold hover:bg-slate-800 flex items-center justify-center transition"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="text-right border-r border-slate-800 pr-4">
+                  <span className="text-[10px] text-slate-400 block">סה"כ (כפול {workstations}):</span>
+                  <span className="text-lg font-black text-cyan-300 font-mono">{(price || 0) * workstations} {currency}</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Description */}
           <div>
@@ -165,7 +211,7 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
             </button>
             <button
               onClick={() => {
-                onAddToCart(product);
+                onAddToCart(product, workstations);
                 onClose();
               }}
               className={`w-1/2 sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs font-bold shadow-lg transition ${
@@ -175,7 +221,7 @@ export default function ProductModal({ product, onClose, onAddToCart, isInCart }
               }`}
             >
               <ShoppingBag className="h-4 w-4" />
-              <span>{isInCart ? 'כבר בסל הקניות' : isService ? 'הוסף לבקשת הצעת מחיר' : 'הוסף לסל הקניות'}</span>
+              <span>{isService ? 'הוסף לבקשת הצעת מחיר' : `הוסף לסל (${workstations} עמדות)`}</span>
             </button>
           </div>
         </div>
