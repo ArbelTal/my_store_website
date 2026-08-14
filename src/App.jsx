@@ -54,25 +54,19 @@ export default function App() {
 
   // Load settings from localStorage or default
   const [settings, setSettings] = useState(() => {
+    const DEFAULT_SETTINGS = {
+      whatsappNumber: '972528698705', 
+      contactEmail: 'rbell.t@gmail.com', 
+      adminPin: '1234',
+      emailjsServiceId: 'service_pvwlgn6',
+      emailjsTemplateId: 'template_3ra3tt5',
+      emailjsPublicKey: '8dWz_eu7BFxbEJobV'
+    };
     try {
       const saved = localStorage.getItem('revit_store_settings');
-      return saved ? JSON.parse(saved) : { 
-        whatsappNumber: '', 
-        contactEmail: 'rbell.t@gmail.com', 
-        adminPin: '1234',
-        emailjsServiceId: '',
-        emailjsTemplateId: 'template_3ra3tt5',
-        emailjsPublicKey: ''
-      };
+      return saved ? { ...DEFAULT_SETTINGS, ...JSON.parse(saved) } : DEFAULT_SETTINGS;
     } catch (e) {
-      return { 
-        whatsappNumber: '', 
-        contactEmail: 'rbell.t@gmail.com', 
-        adminPin: '1234',
-        emailjsServiceId: '',
-        emailjsTemplateId: 'template_3ra3tt5',
-        emailjsPublicKey: ''
-      };
+      return DEFAULT_SETTINGS;
     }
   });
 

@@ -75,12 +75,12 @@ export default function AdminPanel({
   });
 
   const [settingsForm, setSettingsForm] = useState({
-    whatsappNumber: settings.whatsappNumber || '',
+    whatsappNumber: settings.whatsappNumber || '972528698705',
     contactEmail: settings.contactEmail || 'rbell.t@gmail.com',
     adminPin: settings.adminPin || '1234',
-    emailjsServiceId: settings.emailjsServiceId || '',
+    emailjsServiceId: settings.emailjsServiceId || 'service_pvwlgn6',
     emailjsTemplateId: settings.emailjsTemplateId || 'template_3ra3tt5',
-    emailjsPublicKey: settings.emailjsPublicKey || ''
+    emailjsPublicKey: settings.emailjsPublicKey || '8dWz_eu7BFxbEJobV'
   });
 
   const [notification, setNotification] = useState('');
