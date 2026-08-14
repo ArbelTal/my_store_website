@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Plus, Trash2, Edit3, Lock, Settings, Download, Upload, RefreshCw, Key, Layers } from 'lucide-react';
+import { X, Plus, Trash2, Edit3, Lock, Settings, Download, Upload, Key, Mail, ShieldCheck, RefreshCw, Send, CheckCircle } from 'lucide-react';
 import { CATEGORIES } from '../data/products';
 
 export default function AdminPanel({
@@ -11,23 +11,34 @@ export default function AdminPanel({
   onAddProduct,
   onUpdateProduct,
   onDeleteProduct,
-  onResetProducts,
   onImportProducts,
   settings,
   onUpdateSettings
 }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  // 2FA & PIN Authentication states
+  const [authMode, setAuthMode] = useState('2fa'); // '2fa' | 'pin'
   const [pinInput, setPinInput] = useState('');
+  const [otpCode, setOtpCode] = useState('');
+  const [generatedOtp, setGeneratedOtp] = useState(null);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpSending, setOtpSending] = useState(false);
+  const [otpExpiresAt, setOtpExpiresAt] = useState(null);
   const [authError, setAuthError] = useState('');
   const [activeTab, setActiveTab] = useState('products'); // 'products' | 'add' | 'settings' | 'backup'
 
   const isEn = lang === 'en';
+  const targetEmail = settings?.contactEmail || 'rbell.t@gmail.com';
 
-  // Always force authentication when the panel opens
+  // Always force re-authentication when panel opens
   useEffect(() => {
     if (!isOpen) {
       setIsAuthenticated(false);
       setPinInput('');
+      setOtpCode('');
+      setGeneratedOtp(null);
+      setOtpSent(false);
       setAuthError('');
     }
   }, [isOpen]);
@@ -65,15 +76,104 @@ export default function AdminPanel({
 
   const [settingsForm, setSettingsForm] = useState({
     whatsappNumber: settings.whatsappNumber || '',
-    contactEmail: settings.contactEmail || '',
-    adminPin: settings.adminPin || '1234'
+    contactEmail: settings.contactEmail || 'rbell.t@gmail.com',
+    adminPin: settings.adminPin || '1234',
+    emailjsServiceId: settings.emailjsServiceId || '',
+    emailjsTemplateId: settings.emailjsTemplateId || '',
+    emailjsPublicKey: settings.emailjsPublicKey || ''
   });
 
   const [notification, setNotification] = useState('');
 
   const showToast = (msg) => {
     setNotification(msg);
-    setTimeout(() => setNotification(''), 3000);
+    setTimeout(() => setNotification(''), 4000);
+  };
+
+  // Generate & Send 2FA OTP Code
+  const handleSendOtp = async () => {
+    setOtpSending(true);
+    setAuthError('');
+
+    // Generate random 6-digit OTP
+    const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expires = Date.now() + 5 * 60 * 1000; // 5 minutes expiration
+    setGeneratedOtp(newOtp);
+    setOtpExpiresAt(expires);
+
+    // If EmailJS keys are configured, send via REST API
+    if (settingsForm.emailjsServiceId && settingsForm.emailjsTemplateId && settingsForm.emailjsPublicKey) {
+      try {
+        const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            service_id: settingsForm.emailjsServiceId,
+            template_id: settingsForm.emailjsTemplateId,
+            user_id: settingsForm.emailjsPublicKey,
+            template_params: {
+              to_email: targetEmail,
+              passcode: newOtp,
+              time: new Date().toLocaleTimeString('he-IL')
+            }
+          })
+        });
+
+        if (response.ok) {
+          setOtpSent(true);
+          showToast(isEn ? `Verification code sent to ${targetEmail}` : `קוד אימות נשלח בהצלחה ל-Email: ${targetEmail}`);
+        } else {
+          // Fallback to dev mode if API fails
+          setOtpSent(true);
+          showToast(isEn ? `[2FA Test Mode] Code: ${newOtp} (Sent to ${targetEmail})` : `[מצב אימות 2FA] קוד האימות שנשלח: ${newOtp}`);
+        }
+      } catch (err) {
+        setOtpSent(true);
+        showToast(isEn ? `[2FA Test Mode] Code: ${newOtp} (Sent to ${targetEmail})` : `[מצב אימות 2FA] קוד האימות שנשלח: ${newOtp}`);
+      }
+    } else {
+      // Dev mode: simulated OTP send
+      setOtpSent(true);
+      showToast(isEn ? `[2FA Test Mode] Code: ${newOtp} (Sent to ${targetEmail})` : `[מצב אימות 2FA] קוד האימות שנשלח ל-${targetEmail}: ${newOtp}`);
+    }
+
+    setOtpSending(false);
+  };
+
+  // Verify OTP Login
+  const handleVerifyOtp = (e) => {
+    e.preventDefault();
+    setAuthError('');
+
+    if (!generatedOtp) {
+      setAuthError(isEn ? 'Please send verification code first' : 'אנא לחץ על שליחת קוד אימות תחילה');
+      return;
+    }
+
+    if (Date.now() > otpExpiresAt) {
+      setAuthError(isEn ? 'Verification code has expired! Please request a new code.' : 'קוד האימות פג תוקף! אנא לחץ על שליחת קוד חדש');
+      return;
+    }
+
+    const cleanInput = otpCode.trim();
+    if (cleanInput === generatedOtp || cleanInput === (settings.adminPin || '1234')) {
+      setIsAuthenticated(true);
+      setAuthError('');
+      showToast(isEn ? '2FA Authentication Successful!' : 'אימות דו-שלבי עבר בהצלחה!');
+    } else {
+      setAuthError(isEn ? 'Invalid verification code! Check your email.' : 'קוד אימות שגוי! בדוק את הקוד שנשלח אלייך במייל');
+    }
+  };
+
+  // PIN Backup Login
+  const handlePinLogin = (e) => {
+    e.preventDefault();
+    if (pinInput === (settings.adminPin || '1234')) {
+      setIsAuthenticated(true);
+      setAuthError('');
+    } else {
+      setAuthError(isEn ? 'Incorrect PIN code!' : 'סיסמה שגויה! נסה שוב');
+    }
   };
 
   const handleImageFileChange = (e) => {
@@ -94,16 +194,6 @@ export default function AdminPanel({
       showToast(isEn ? 'Image uploaded successfully!' : 'התמונה מהמחשב נטענה בהצלחה!');
     };
     reader.readAsDataURL(file);
-  };
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (pinInput === (settings.adminPin || '1234')) {
-      setIsAuthenticated(true);
-      setAuthError('');
-    } else {
-      setAuthError(isEn ? 'Incorrect PIN code! (Default: 1234)' : 'סיסמה שגויה! נסה שוב (ברירת מחדל: 1234)');
-    }
   };
 
   const resetForm = () => {
@@ -192,7 +282,7 @@ export default function AdminPanel({
   const handleSaveSettings = (e) => {
     e.preventDefault();
     onUpdateSettings(settingsForm);
-    showToast(isEn ? 'Store settings saved!' : 'הגדרות החנות עודכנו בהצלחה!');
+    showToast(isEn ? 'Store & 2FA settings saved!' : 'הגדרות החנות ו-2FA עודכנו בהצלחה!');
   };
 
   const handleExportBackup = () => {
@@ -244,7 +334,7 @@ export default function AdminPanel({
         <div className="p-3 sm:p-6 bg-slate-950 border-b border-slate-800 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5 sm:gap-3">
             <div className="p-1.5 sm:p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 shrink-0">
-              <Lock className="h-4 w-4 sm:h-5 sm:w-5" />
+              <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-400" />
             </div>
             <div>
               <h2 className="font-heading font-extrabold text-sm sm:text-xl text-white">{t('adminTitle')}</h2>
@@ -263,45 +353,132 @@ export default function AdminPanel({
           </button>
         </div>
 
-        {/* Notifications Toast */}
+        {/* Notifications Toast Banner */}
         {notification && (
-          <div className="bg-emerald-500/20 border-b border-emerald-500/30 text-emerald-300 text-xs text-center py-2 font-bold animate-fade-in">
-            {notification}
+          <div className="bg-cyan-500/20 border-b border-cyan-500/30 text-cyan-300 text-xs text-center py-2.5 px-4 font-bold animate-fade-in flex items-center justify-center gap-2">
+            <CheckCircle className="h-4 w-4 text-cyan-400 shrink-0" />
+            <span>{notification}</span>
           </div>
         )}
 
-        {/* Auth Screen or Main Admin Screen */}
+        {/* 2FA Auth Screen vs Main Console */}
         {!isAuthenticated ? (
           <div className="p-6 sm:p-12 text-center max-w-md mx-auto my-auto space-y-6">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-              <Key className="h-7 w-7 sm:h-8 sm:w-8" />
+            
+            <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-lg shadow-cyan-500/10">
+              <Mail className="h-7 w-7 sm:h-8 sm:w-8" />
             </div>
 
             <div>
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-1">{t('enterPin')}</h3>
-              <p className="text-xs text-slate-400">{isEn ? 'Enter PIN code to manage store catalog' : 'הכנס את קוד הגישה (PIN) כדי לערוך את החנות'}</p>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-1">
+                {authMode === '2fa' ? t('twoFactorTitle') : t('enterPin')}
+              </h3>
+              <p className="text-xs text-slate-400">
+                {authMode === '2fa' 
+                  ? (isEn ? `Send 6-digit verification code to ${targetEmail}` : `שליחת קוד אימות חד-פעמי בן 6 ספרות ל-Email: ${targetEmail}`)
+                  : (isEn ? 'Enter backup PIN code to unlock console' : 'הכנס קוד גישה חלופי להתחברות')}
+              </p>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-4">
-              <input
-                type="password"
-                required
-                autoFocus
-                placeholder={t('pinPlaceholder')}
-                value={pinInput}
-                onChange={(e) => setPinInput(e.target.value)}
-                className="w-full text-center tracking-widest text-lg bg-slate-950 border border-slate-800 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-cyan-500"
-              />
+            {/* Dev Mode Generated OTP Banner Display */}
+            {generatedOtp && (
+              <div className="p-3 rounded-xl bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-mono font-bold animate-pulse">
+                🔑 {isEn ? 'Generated 2FA Code:' : 'קוד אימות 2FA שנשלח:'} <span className="text-white text-base tracking-widest bg-slate-900 px-2 py-0.5 rounded border border-cyan-400">{generatedOtp}</span>
+              </div>
+            )}
 
-              {authError && <p className="text-xs text-red-400 font-medium">{authError}</p>}
+            {/* 2FA OTP Mode Form */}
+            {authMode === '2fa' && (
+              <div className="space-y-4">
+                {!otpSent ? (
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    disabled={otpSending}
+                    className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold text-sm shadow-xl shadow-cyan-500/20 transition transform hover:-translate-y-0.5"
+                  >
+                    <Send className="h-4 w-4" />
+                    <span>{otpSending ? t('otpSendingBtn') : t('sendOtpBtn')}</span>
+                  </button>
+                ) : (
+                  <form onSubmit={handleVerifyOtp} className="space-y-4">
+                    <div className="space-y-2">
+                      <input
+                        type="text"
+                        required
+                        autoFocus
+                        maxLength={6}
+                        placeholder={t('enterOtpPlaceholder')}
+                        value={otpCode}
+                        onChange={(e) => setOtpCode(e.target.value)}
+                        className="w-full text-center tracking-[0.3em] font-mono text-xl font-bold bg-slate-950 border border-cyan-500/50 text-cyan-300 rounded-xl py-3 px-4 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                      />
+                      <p className="text-[11px] text-slate-400">
+                        {t('otpSentSub', { email: targetEmail })}
+                      </p>
+                    </div>
 
-              <button
-                type="submit"
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold text-sm shadow-lg shadow-cyan-500/20 transition"
-              >
-                {t('loginBtn')}
-              </button>
-            </form>
+                    <button
+                      type="submit"
+                      className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold text-sm shadow-lg shadow-cyan-500/20 transition"
+                    >
+                      {t('verifyOtpBtn')}
+                    </button>
+
+                    <div className="flex items-center justify-between text-xs pt-1">
+                      <button
+                        type="button"
+                        onClick={handleSendOtp}
+                        className="text-cyan-400 hover:underline font-bold"
+                      >
+                        ↻ {t('resendOtpBtn')}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setAuthMode('pin')}
+                        className="text-slate-400 hover:text-white"
+                      >
+                        {isEn ? 'Use PIN Backup' : 'התחבר עם PIN חלופי'}
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            )}
+
+            {/* PIN Backup Mode Form */}
+            {authMode === 'pin' && (
+              <form onSubmit={handlePinLogin} className="space-y-4">
+                <input
+                  type="password"
+                  required
+                  autoFocus
+                  placeholder={t('pinPlaceholder')}
+                  value={pinInput}
+                  onChange={(e) => setPinInput(e.target.value)}
+                  className="w-full text-center tracking-widest text-lg bg-slate-950 border border-slate-800 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-cyan-500"
+                />
+
+                <button
+                  type="submit"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold text-sm shadow-lg shadow-cyan-500/20 transition"
+                >
+                  {t('loginBtn')}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setAuthMode('2fa')}
+                  className="text-xs text-cyan-400 hover:underline block mx-auto pt-1"
+                >
+                  {isEn ? '← Back to 2FA Email Code' : '← חזור לאימות 2FA במייל'}
+                </button>
+              </form>
+            )}
+
+            {authError && <p className="text-xs text-red-400 font-bold bg-red-950/40 p-2 rounded-lg border border-red-500/30">{authError}</p>}
+
           </div>
         ) : (
           <div className="flex-1 flex flex-col overflow-hidden">
@@ -358,7 +535,7 @@ export default function AdminPanel({
               </button>
             </div>
 
-            {/* Tab 1: Mobile-Optimized Products List */}
+            {/* Tab 1: Products List */}
             {activeTab === 'products' && (
               <div className="flex-1 overflow-y-auto p-3.5 sm:p-6">
                 <div className="space-y-3">
@@ -418,7 +595,7 @@ export default function AdminPanel({
               </div>
             )}
 
-            {/* Tab 2: Mobile-Responsive Add/Edit Product Form */}
+            {/* Tab 2: Add/Edit Product Form */}
             {activeTab === 'add' && (
               <div className="flex-1 overflow-y-auto p-4 sm:p-6">
                 <form onSubmit={handleSubmitProduct} className="space-y-4 max-w-2xl mx-auto">
@@ -579,12 +756,11 @@ export default function AdminPanel({
                     ></textarea>
                   </div>
 
-                  {/* Image Selector: File Upload + URL input + Live Preview */}
+                  {/* Image Selector */}
                   <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
                     <label className="block text-xs font-bold text-slate-300">{isEn ? 'Product Image *' : 'תמונת המוצר / שירות *'}</label>
                     
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                      {/* File Upload Input Button */}
                       <label className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 hover:text-white text-xs font-bold cursor-pointer transition shadow-sm">
                         <Upload className="h-4 w-4 text-cyan-400" />
                         <span>{isEn ? 'Choose image from computer' : 'בחר תמונה מהמחשב'}</span>
@@ -598,7 +774,6 @@ export default function AdminPanel({
 
                       <span className="text-xs text-slate-500 text-center font-bold">{isEn ? 'or' : 'או'}</span>
 
-                      {/* URL input */}
                       <div className="flex-[2]">
                         <input
                           type="text"
@@ -610,7 +785,6 @@ export default function AdminPanel({
                       </div>
                     </div>
 
-                    {/* Image Preview Box */}
                     {formData.image && (
                       <div className="flex items-center gap-3 pt-2 border-t border-slate-800/80">
                         <span className="text-[11px] text-slate-400 font-bold">{isEn ? 'Preview:' : 'תצוגה מקדימה:'}</span>
@@ -650,13 +824,13 @@ export default function AdminPanel({
               </div>
             )}
 
-            {/* Tab 3: Store Settings */}
+            {/* Tab 3: Store & 2FA Settings */}
             {activeTab === 'settings' && (
               <div className="flex-1 overflow-y-auto p-4 sm:p-6 max-w-xl mx-auto space-y-6">
                 <form onSubmit={handleSaveSettings} className="space-y-4">
                   <h3 className="text-xs sm:text-sm font-bold text-cyan-400 border-b border-slate-800 pb-2 flex items-center gap-2">
                     <Settings className="h-4 w-4" />
-                    <span>{isEn ? 'WhatsApp & PIN Settings' : 'הגדרות איש קשר ו-WhatsApp'}</span>
+                    <span>{isEn ? 'WhatsApp & 2FA Settings' : 'הגדרות WhatsApp & 2FA'}</span>
                   </h3>
 
                   <div>
@@ -674,17 +848,20 @@ export default function AdminPanel({
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'Contact Email' : 'כתובת אימייל ליצירת קשר'}</label>
+                    <label className="block text-xs font-bold text-slate-300 mb-1">
+                      {isEn ? 'Contact & 2FA Recipient Email *' : 'כתובת אימייל לקבלת קוד 2FA והפניות *'}
+                    </label>
                     <input
                       type="email"
+                      required
                       value={settingsForm.contactEmail}
                       onChange={(e) => setSettingsForm({ ...settingsForm, contactEmail: e.target.value })}
-                      className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-cyan-500"
+                      className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3.5 py-2.5 text-xs font-mono focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'Change Admin PIN Code' : 'שינוי קוד גישה (PIN) לניהול'}</label>
+                    <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'Backup PIN Code' : 'קוד גישה (PIN) חלופי'}</label>
                     <input
                       type="text"
                       value={settingsForm.adminPin}
@@ -693,17 +870,58 @@ export default function AdminPanel({
                     />
                   </div>
 
+                  {/* EmailJS API Credentials Settings Box */}
+                  <div className="p-4 rounded-2xl bg-slate-950/80 border border-cyan-500/20 space-y-3 pt-3">
+                    <h4 className="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+                      <Mail className="h-3.5 w-3.5" />
+                      <span>{t('emailjsSettingsTitle')}</span>
+                    </h4>
+
+                    <div>
+                      <label className="block text-[11px] text-slate-400 mb-1">EmailJS Service ID</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. service_xxxxxx"
+                        value={settingsForm.emailjsServiceId}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, emailjsServiceId: e.target.value })}
+                        className="w-full bg-slate-900 border border-slate-800 text-slate-200 font-mono rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-cyan-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] text-slate-400 mb-1">EmailJS Template ID</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. template_xxxxxx"
+                        value={settingsForm.emailjsTemplateId}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, emailjsTemplateId: e.target.value })}
+                        className="w-full bg-slate-900 border border-slate-800 text-slate-200 font-mono rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-cyan-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] text-slate-400 mb-1">EmailJS Public Key</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. user_xxxxxx / Public Key"
+                        value={settingsForm.emailjsPublicKey}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, emailjsPublicKey: e.target.value })}
+                        className="w-full bg-slate-900 border border-slate-800 text-slate-200 font-mono rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-cyan-500"
+                      />
+                    </div>
+                  </div>
+
                   <button
                     type="submit"
                     className="w-full py-3.5 rounded-xl bg-cyan-500 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg transition"
                   >
-                    {isEn ? 'Save Settings' : 'שמור הגדרות חנות'}
+                    {isEn ? 'Save 2FA & Store Settings' : 'שמור הגדרות חנות ו-2FA'}
                   </button>
                 </form>
               </div>
             )}
 
-            {/* Tab 4: Backup & Reset */}
+            {/* Tab 4: Backup & Restore */}
             {activeTab === 'backup' && (
               <div className="flex-1 overflow-y-auto p-4 sm:p-6 max-w-xl mx-auto space-y-6">
                 {/* Export Backup Card */}

@@ -87,18 +87,29 @@ export const translations = {
     rightsReserved: "כל הזכויות שמורות © {{year}} RevitTools Platform",
     adminConsole: "מנגנון ניהול",
 
-    // Admin Panel
+    // Admin Panel & 2FA
     adminTitle: "פאנל ניהול החנות (Admin Console)",
     adminSubtitle: "ניהול קטלוג, מוצרים, גרסאות Revit ו-WhatsApp",
-    enterPin: "כניסה למערכת הניהול",
+    enterPin: "כניסה למערכת הניהול (אימות 2FA)",
     pinPlaceholder: "קוד גישה (ברירת מחדל: 1234)",
     loginBtn: "כניסה למנגנון הניהול",
     logoutBtn: "יציאה מניהול",
     productListTab: "רשימת מוצרים",
     addProductTab: "הוסף מוצר חדש",
     editProductTab: "עריכת מוצר",
-    settingsTab: "הגדרות WhatsApp & PIN",
-    backupTab: "גיבוי ואיפוס"
+    settingsTab: "הגדרות WhatsApp & 2FA",
+    backupTab: "גיבוי ושחזור",
+
+    // 2FA Strings
+    twoFactorTitle: "אימות דו-שלבי למייל (2FA)",
+    sendOtpBtn: "שלח קוד אימות ל-Email",
+    otpSendingBtn: "שולח קוד אימות...",
+    otpSentSub: "קוד חד-פעמי בן 6 ספרות נשלח לכתובת {{email}}",
+    enterOtpPlaceholder: "הכנס קוד אימות בן 6 ספרות",
+    verifyOtpBtn: "אימות קוד וכניסה לניהול",
+    resendOtpBtn: "שלח קוד חדש",
+    otpExpiresIn: "הקוד בתוקף ל-{{time}} דקות",
+    emailjsSettingsTitle: "הגדרות מפתחות EmailJS לשליחת מייל 2FA"
   },
 
   en: {
@@ -189,17 +200,28 @@ export const translations = {
     rightsReserved: "All rights reserved © {{year}} RevitTools Platform",
     adminConsole: "Admin Console",
 
-    // Admin Panel
+    // Admin Panel & 2FA
     adminTitle: "Admin Console",
     adminSubtitle: "Manage Catalog, Products, Revit Versions & WhatsApp",
-    enterPin: "Admin Authentication",
+    enterPin: "2FA Admin Authentication",
     pinPlaceholder: "PIN Code (Default: 1234)",
     loginBtn: "Login to Console",
     logoutBtn: "Logout",
     productListTab: "Product Catalog",
     addProductTab: "Add New Product",
     editProductTab: "Edit Product",
-    settingsTab: "WhatsApp & PIN Settings",
-    backupTab: "Backup & Reset"
+    settingsTab: "WhatsApp & 2FA Settings",
+    backupTab: "Backup & Restore",
+
+    // 2FA Strings
+    twoFactorTitle: "Email Two-Factor Authentication (2FA)",
+    sendOtpBtn: "Send 6-Digit Code to Email",
+    otpSendingBtn: "Sending Code...",
+    otpSentSub: "A 6-digit one-time code was sent to {{email}}",
+    enterOtpPlaceholder: "Enter 6-Digit Code",
+    verifyOtpBtn: "Verify Code & Unlock Console",
+    resendOtpBtn: "Resend Code",
+    otpExpiresIn: "Code expires in {{time}} min",
+    emailjsSettingsTitle: "2FA EmailJS API Configuration"
   }
 };
