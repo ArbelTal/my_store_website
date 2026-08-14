@@ -79,7 +79,7 @@ export default function AdminPanel({
     contactEmail: settings.contactEmail || 'rbell.t@gmail.com',
     adminPin: settings.adminPin || '1234',
     emailjsServiceId: settings.emailjsServiceId || '',
-    emailjsTemplateId: settings.emailjsTemplateId || '',
+    emailjsTemplateId: settings.emailjsTemplateId || 'template_3ra3tt5',
     emailjsPublicKey: settings.emailjsPublicKey || ''
   });
 
