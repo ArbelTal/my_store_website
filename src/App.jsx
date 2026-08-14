@@ -160,6 +160,12 @@ export default function App() {
     localStorage.removeItem('revit_store_products');
   };
 
+  const handleImportProducts = (importedProducts) => {
+    if (Array.isArray(importedProducts) && importedProducts.length > 0) {
+      setProducts(importedProducts);
+    }
+  };
+
   const scrollToCatalog = () => {
     const el = document.getElementById('catalog');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -295,6 +301,7 @@ export default function App() {
         onUpdateProduct={handleUpdateProduct}
         onDeleteProduct={handleDeleteProduct}
         onResetProducts={handleResetProducts}
+        onImportProducts={handleImportProducts}
         settings={settings}
         onUpdateSettings={setSettings}
       />

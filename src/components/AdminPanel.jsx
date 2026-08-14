@@ -12,6 +12,7 @@ export default function AdminPanel({
   onUpdateProduct,
   onDeleteProduct,
   onResetProducts,
+  onImportProducts,
   settings,
   onUpdateSettings
 }) {
@@ -203,6 +204,30 @@ export default function AdminPanel({
     downloadAnchor.click();
     downloadAnchor.remove();
     showToast(isEn ? 'Backup file downloaded!' : 'קובץ גיבוי הורד בהצלחה!');
+  };
+
+  const handleImportBackupFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const importedData = JSON.parse(event.target.result);
+        if (Array.isArray(importedData) && importedData.length > 0) {
+          if (onImportProducts) {
+            onImportProducts(importedData);
+          }
+          showToast(isEn ? 'Catalog restored successfully from JSON file!' : 'הקטלוג שוחזר בהצלחה מתוך קובץ הגיבוי!');
+        } else {
+          showToast(isEn ? 'Invalid catalog backup JSON file' : 'קובץ הגיבוי אינו מכיל רשימת מוצרים תקינה');
+        }
+      } catch (err) {
+        showToast(isEn ? 'Failed to read JSON backup file' : 'שגיאה בפענוח קובץ ה-JSON');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
   };
 
   if (!isOpen) return null;
@@ -681,6 +706,7 @@ export default function AdminPanel({
             {/* Tab 4: Backup & Reset */}
             {activeTab === 'backup' && (
               <div className="flex-1 overflow-y-auto p-4 sm:p-6 max-w-xl mx-auto space-y-6">
+                {/* Export Backup Card */}
                 <div className="p-5 sm:p-6 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-4">
                   <h3 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
                     <Download className="h-4 w-4 text-cyan-400" />
@@ -696,6 +722,27 @@ export default function AdminPanel({
                     <Download className="h-4 w-4" />
                     <span>{isEn ? 'Download Backup Now' : 'הורד קובץ גיבוי כעת'}</span>
                   </button>
+                </div>
+
+                {/* Import Backup Card */}
+                <div className="p-5 sm:p-6 rounded-2xl bg-slate-950/80 border border-cyan-500/20 space-y-4">
+                  <h3 className="text-xs sm:text-sm font-bold text-cyan-400 flex items-center gap-2">
+                    <Upload className="h-4 w-4 text-cyan-400" />
+                    <span>{isEn ? 'Import Catalog JSON Restore' : 'יבוא קובץ גיבוי ושחזור קטלוג (JSON)'}</span>
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    {isEn ? 'Upload a saved JSON backup file to restore all products and settings.' : 'בחר קובץ גיבוי JSON מהמחשב כדי לשחזר את כל המוצרים והקטלוג בחנות.'}
+                  </p>
+                  <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/30 text-xs font-bold transition cursor-pointer">
+                    <Upload className="h-4 w-4" />
+                    <span>{isEn ? 'Choose JSON Backup File' : 'בחר קובץ גיבוי לשחזור'}</span>
+                    <input
+                      type="file"
+                      accept=".json,application/json"
+                      onChange={handleImportBackupFile}
+                      className="hidden"
+                    />
+                  </label>
                 </div>
 
                 <div className="p-5 sm:p-6 rounded-2xl bg-red-950/20 border border-red-500/20 space-y-4">
