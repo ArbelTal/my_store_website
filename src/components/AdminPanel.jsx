@@ -744,27 +744,6 @@ export default function AdminPanel({
                     />
                   </label>
                 </div>
-
-                <div className="p-5 sm:p-6 rounded-2xl bg-red-950/20 border border-red-500/20 space-y-4">
-                  <h3 className="text-xs sm:text-sm font-bold text-red-400 flex items-center gap-2">
-                    <RefreshCw className="h-4 w-4" />
-                    <span>{isEn ? 'Reset to Default Catalog' : 'איפוס לברירת מחדל'}</span>
-                  </h3>
-                  <p className="text-xs text-slate-400">
-                    {isEn ? 'Reset the catalog back to original initial website products.' : 'איפוס הקטלוג חזרה לרשימת המוצרים וההגדרות המקוריות של האתר.'}
-                  </p>
-                  <button
-                    onClick={() => {
-                      if (confirm(isEn ? 'Reset all products to default?' : 'האם אתה בטוח שברצונך לאפס את כל המוצרים לברירת המחדל?')) {
-                        onResetProducts();
-                        showToast(isEn ? 'Catalog reset to default' : 'הנתונים אופסו לברירת המחדל');
-                      }
-                    }}
-                    className="px-4 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300 hover:bg-red-500/30 text-xs font-bold transition"
-                  >
-                    {isEn ? 'Reset Catalog to Defaults' : 'אפס קטלוג לברירת מחדל'}
-                  </button>
-                </div>
               </div>
             )}
 
