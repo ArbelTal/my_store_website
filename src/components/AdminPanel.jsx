@@ -101,40 +101,44 @@ export default function AdminPanel({
     setGeneratedOtp(newOtp);
     setOtpExpiresAt(expires);
 
-    // If EmailJS keys are configured, send via REST API
-    if (settingsForm.emailjsServiceId && settingsForm.emailjsTemplateId && settingsForm.emailjsPublicKey) {
-      try {
-        const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            service_id: settingsForm.emailjsServiceId,
-            template_id: settingsForm.emailjsTemplateId,
-            user_id: settingsForm.emailjsPublicKey,
-            template_params: {
-              to_email: targetEmail,
-              passcode: newOtp,
-              time: new Date().toLocaleTimeString('he-IL')
-            }
-          })
-        });
+    const serviceId = settingsForm.emailjsServiceId || 'service_pvwlgn6';
+    const templateId = settingsForm.emailjsTemplateId || 'template_3ra3tt5';
+    const publicKey = settingsForm.emailjsPublicKey || '8dWz_eu7BFxbEJobV';
 
-        if (response.ok) {
-          setOtpSent(true);
-          showToast(isEn ? `Verification code sent to ${targetEmail}` : `קוד אימות נשלח בהצלחה ל-Email: ${targetEmail}`);
-        } else {
-          // Fallback to dev mode if API fails
-          setOtpSent(true);
-          showToast(isEn ? `[2FA Test Mode] Code: ${newOtp} (Sent to ${targetEmail})` : `[מצב אימות 2FA] קוד האימות שנשלח: ${newOtp}`);
-        }
-      } catch (err) {
+    try {
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          service_id: serviceId,
+          template_id: templateId,
+          user_id: publicKey,
+          template_params: {
+            to_email: targetEmail,
+            email: targetEmail,
+            user_email: targetEmail,
+            passcode: newOtp,
+            code: newOtp,
+            otp: newOtp,
+            message: newOtp,
+            time: new Date().toLocaleTimeString('he-IL')
+          }
+        })
+      });
+
+      if (response.ok) {
         setOtpSent(true);
-        showToast(isEn ? `[2FA Test Mode] Code: ${newOtp} (Sent to ${targetEmail})` : `[מצב אימות 2FA] קוד האימות שנשלח: ${newOtp}`);
+        showToast(isEn ? `Verification code sent to ${targetEmail}` : `קוד אימות נשלח בהצלחה ל-Email: ${targetEmail}`);
+      } else {
+        const errorText = await response.text();
+        console.error('EmailJS Error:', errorText);
+        setOtpSent(true);
+        showToast(isEn ? `Failed to send email via EmailJS (${errorText})` : `שגיאה בשליחת המייל דרך EmailJS: ${errorText}`);
       }
-    } else {
-      // Dev mode: simulated OTP send
+    } catch (err) {
+      console.error('EmailJS Exception:', err);
       setOtpSent(true);
-      showToast(isEn ? `[2FA Test Mode] Code: ${newOtp} (Sent to ${targetEmail})` : `[מצב אימות 2FA] קוד האימות שנשלח ל-${targetEmail}: ${newOtp}`);
+      showToast(isEn ? 'Connection error while sending email' : 'שגיאת תקשורת בחיבור ל-EmailJS');
     }
 
     setOtpSending(false);
@@ -379,13 +383,6 @@ export default function AdminPanel({
                   : (isEn ? 'Enter backup PIN code to unlock console' : 'הכנס קוד גישה חלופי להתחברות')}
               </p>
             </div>
-
-            {/* Dev Mode Generated OTP Banner Display */}
-            {generatedOtp && (
-              <div className="p-3 rounded-xl bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-mono font-bold animate-pulse">
-                🔑 {isEn ? 'Generated 2FA Code:' : 'קוד אימות 2FA שנשלח:'} <span className="text-white text-base tracking-widest bg-slate-900 px-2 py-0.5 rounded border border-cyan-400">{generatedOtp}</span>
-              </div>
-            )}
 
             {/* 2FA OTP Mode Form */}
             {authMode === '2fa' && (
