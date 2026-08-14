@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { X, Plus, Trash2, Edit3, Save, Lock, Settings, Download, Upload, Check, RefreshCw, Key, ShieldCheck, PhoneCall, Layers } from 'lucide-react';
+import { X, Plus, Trash2, Edit3, Lock, Settings, Download, Upload, RefreshCw, Key, Layers } from 'lucide-react';
 import { CATEGORIES } from '../data/products';
 
 export default function AdminPanel({
+  lang,
+  t,
   isOpen,
   onClose,
   products,
@@ -18,6 +20,8 @@ export default function AdminPanel({
   const [authError, setAuthError] = useState('');
   const [activeTab, setActiveTab] = useState('products'); // 'products' | 'add' | 'settings' | 'backup'
 
+  const isEn = lang === 'en';
+
   // Always force authentication when the panel opens
   useEffect(() => {
     if (!isOpen) {
@@ -31,21 +35,29 @@ export default function AdminPanel({
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
+    titleEn: '',
     category: 'plugins',
     categoryName: 'תוספי Revit',
+    categoryNameEn: 'Revit Add-ins',
     badge: 'חדש',
+    badgeEn: 'New',
     badgeColor: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/40',
     price: 200,
     currency: '₪',
     priceLabel: 'לפי הצעת מחיר',
+    priceLabelEn: 'Custom Quote',
     isService: false,
     versionText: 'Revit 2022+',
     revitVersions: ['2022', '2023', '2024', '2025'],
     type: 'C# Add-in',
     shortDescription: '',
+    shortDescriptionEn: '',
     description: '',
+    descriptionEn: '',
     features: '',
+    featuresEn: '',
     systemRequirements: 'רוויט 2022-2025, Windows 10/11',
+    systemRequirementsEn: 'Revit 2022-2025, Windows 10/11',
     image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80',
     tags: 'Revit, Automation, BIM'
   });
@@ -68,7 +80,7 @@ export default function AdminPanel({
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      showToast('נא לבחור קובץ תמונה תקין');
+      showToast(isEn ? 'Please select a valid image file' : 'נא לבחור קובץ תמונה תקין');
       return;
     }
 
@@ -78,7 +90,7 @@ export default function AdminPanel({
         ...prev,
         image: event.target.result
       }));
-      showToast('התמונה מהמחשב נטענה בהצלחה!');
+      showToast(isEn ? 'Image uploaded successfully!' : 'התמונה מהמחשב נטענה בהצלחה!');
     };
     reader.readAsDataURL(file);
   };
@@ -89,7 +101,7 @@ export default function AdminPanel({
       setIsAuthenticated(true);
       setAuthError('');
     } else {
-      setAuthError('סיסמה שגויה! נסה שוב (ברירת מחדל: 1234)');
+      setAuthError(isEn ? 'Incorrect PIN code! (Default: 1234)' : 'סיסמה שגויה! נסה שוב (ברירת מחדל: 1234)');
     }
   };
 
@@ -97,21 +109,29 @@ export default function AdminPanel({
     setEditingId(null);
     setFormData({
       title: '',
+      titleEn: '',
       category: 'plugins',
       categoryName: 'תוספי Revit',
+      categoryNameEn: 'Revit Add-ins',
       badge: 'חדש',
+      badgeEn: 'New',
       badgeColor: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/40',
       price: 200,
       currency: '₪',
       priceLabel: 'לפי הצעת מחיר',
+      priceLabelEn: 'Custom Quote',
       isService: false,
       versionText: 'Revit 2022+',
       revitVersions: ['2022', '2023', '2024', '2025'],
       type: 'C# Add-in',
       shortDescription: '',
+      shortDescriptionEn: '',
       description: '',
+      descriptionEn: '',
       features: '',
+      featuresEn: '',
       systemRequirements: 'רוויט 2022-2025, Windows 10/11',
+      systemRequirementsEn: 'Revit 2022-2025, Windows 10/11',
       image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80',
       tags: 'Revit, Automation, BIM'
     });
@@ -125,6 +145,7 @@ export default function AdminPanel({
       ...product,
       versionText: initialVersionText,
       features: Array.isArray(product.features) ? product.features.join('\n') : product.features,
+      featuresEn: Array.isArray(product.featuresEn) ? product.featuresEn.join('\n') : (product.featuresEn || ''),
       tags: Array.isArray(product.tags) ? product.tags.join(', ') : product.tags,
       revitVersions: product.revitVersions || ['2022', '2023', '2024', '2025']
     });
@@ -136,26 +157,31 @@ export default function AdminPanel({
 
     const categoryObj = CATEGORIES.find(c => c.id === formData.category);
     const categoryName = categoryObj ? categoryObj.name : 'תוספי Revit';
+    const categoryNameEn = categoryObj ? (categoryObj.nameEn || categoryObj.name) : 'Revit Add-ins';
 
     const processedProduct = {
       ...formData,
       id: editingId || `prod-${Date.now()}`,
       categoryName,
+      categoryNameEn,
       price: formData.isService ? null : Number(formData.price),
       features: typeof formData.features === 'string' 
         ? formData.features.split('\n').filter(f => f.trim()) 
         : formData.features,
+      featuresEn: typeof formData.featuresEn === 'string' 
+        ? formData.featuresEn.split('\n').filter(f => f.trim()) 
+        : formData.featuresEn,
       tags: typeof formData.tags === 'string'
-        ? formData.tags.split(',').map(t => t.trim()).filter(Boolean)
+        ? formData.tags.split(',').map(tItem => tItem.trim()).filter(Boolean)
         : formData.tags
     };
 
     if (editingId) {
       onUpdateProduct(processedProduct);
-      showToast('המוצר עודכן בהצלחה!');
+      showToast(isEn ? 'Product updated successfully!' : 'המוצר עודכן בהצלחה!');
     } else {
       onAddProduct(processedProduct);
-      showToast('מוצר חדש נוסף בהצלחה!');
+      showToast(isEn ? 'New product added successfully!' : 'מוצר חדש נוסף בהצלחה!');
     }
 
     resetForm();
@@ -165,7 +191,7 @@ export default function AdminPanel({
   const handleSaveSettings = (e) => {
     e.preventDefault();
     onUpdateSettings(settingsForm);
-    showToast('הגדרות החנות עודכנו בהצלחה!');
+    showToast(isEn ? 'Store settings saved!' : 'הגדרות החנות עודכנו בהצלחה!');
   };
 
   const handleExportBackup = () => {
@@ -176,28 +202,28 @@ export default function AdminPanel({
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
-    showToast('קובץ גיבוי הורד בהצלחה!');
+    showToast(isEn ? 'Backup file downloaded!' : 'קובץ גיבוי הורד בהצלחה!');
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-950/85 backdrop-blur-md animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-5 overflow-y-auto bg-slate-950/85 backdrop-blur-md animate-fade-in">
       
       <div 
-        className="relative w-full max-w-4xl bg-slate-900 border border-cyan-500/30 rounded-3xl shadow-2xl overflow-hidden my-6 flex flex-col max-h-[90vh]"
+        className="relative w-full max-w-4xl bg-slate-900 border border-cyan-500/30 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[94vh]"
         onClick={(e) => e.stopPropagation()}
       >
         
-        {/* Header */}
-        <div className="p-6 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+        {/* Modal Header */}
+        <div className="p-4 sm:p-6 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+            <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 shrink-0">
               <Lock className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="font-heading font-extrabold text-xl text-white">פאנל ניהול החנות (Admin Console)</h2>
-              <span className="text-xs text-cyan-400 font-mono">ניהול קטלוג, מוצרים, גרסאות Revit ו-WhatsApp</span>
+              <h2 className="font-heading font-extrabold text-base sm:text-xl text-white">{t('adminTitle')}</h2>
+              <span className="text-[11px] sm:text-xs text-cyan-400 font-mono hidden sm:inline-block">{t('adminSubtitle')}</span>
             </div>
           </div>
 
@@ -221,14 +247,14 @@ export default function AdminPanel({
 
         {/* Auth Screen or Main Admin Screen */}
         {!isAuthenticated ? (
-          <div className="p-8 sm:p-12 text-center max-w-md mx-auto my-auto space-y-6">
-            <div className="w-16 h-16 mx-auto rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-              <Key className="h-8 w-8" />
+          <div className="p-6 sm:p-12 text-center max-w-md mx-auto my-auto space-y-6">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+              <Key className="h-7 w-7 sm:h-8 sm:w-8" />
             </div>
 
             <div>
-              <h3 className="text-xl font-bold text-white mb-1">כניסה למערכת הניהול</h3>
-              <p className="text-xs text-slate-400">הכנס את קוד הגישה (PIN) כדי לערוך את החנות</p>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-1">{t('enterPin')}</h3>
+              <p className="text-xs text-slate-400">{isEn ? 'Enter PIN code to manage store catalog' : 'הכנס את קוד הגישה (PIN) כדי לערוך את החנות'}</p>
             </div>
 
             <form onSubmit={handleLogin} className="space-y-4">
@@ -236,7 +262,7 @@ export default function AdminPanel({
                 type="password"
                 required
                 autoFocus
-                placeholder="קוד גישה (ברירת מחדל: 1234)"
+                placeholder={t('pinPlaceholder')}
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value)}
                 className="w-full text-center tracking-widest text-lg bg-slate-950 border border-slate-800 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-cyan-500"
@@ -246,54 +272,54 @@ export default function AdminPanel({
 
               <button
                 type="submit"
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold text-sm shadow-lg shadow-cyan-500/20 transition"
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold text-sm shadow-lg shadow-cyan-500/20 transition"
               >
-                כניסה למנגנון הניהול
+                {t('loginBtn')}
               </button>
             </form>
           </div>
         ) : (
           <div className="flex-1 flex flex-col overflow-hidden">
             
-            {/* Admin Tabs Header */}
-            <div className="flex items-center gap-2 p-3 bg-slate-950/80 border-b border-slate-800 overflow-x-auto">
+            {/* Admin Tabs Header - Mobile Horizontally Scrollable Bar */}
+            <div className="flex items-center gap-1.5 p-2.5 sm:p-3 bg-slate-950/90 border-b border-slate-800 overflow-x-auto scrollbar-none">
               <button
                 onClick={() => { setActiveTab('products'); resetForm(); }}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
-                  activeTab === 'products' ? 'bg-cyan-500 text-slate-950' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap shrink-0 ${
+                  activeTab === 'products' ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
                 }`}
               >
-                רשימת מוצרים ({products.length})
+                {t('productListTab')} ({products.length})
               </button>
 
               <button
                 onClick={() => { setActiveTab('add'); resetForm(); }}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition ${
-                  activeTab === 'add' ? 'bg-cyan-500 text-slate-950' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap shrink-0 ${
+                  activeTab === 'add' ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
                 }`}
               >
                 <Plus className="h-3.5 w-3.5" />
-                <span>{editingId ? 'עריכת מוצר' : 'הוסף מוצר חדש'}</span>
+                <span>{editingId ? t('editProductTab') : t('addProductTab')}</span>
               </button>
 
               <button
                 onClick={() => setActiveTab('settings')}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition ${
-                  activeTab === 'settings' ? 'bg-cyan-500 text-slate-950' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap shrink-0 ${
+                  activeTab === 'settings' ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
                 }`}
               >
                 <Settings className="h-3.5 w-3.5" />
-                <span>הגדרות WhatsApp & PIN</span>
+                <span>{t('settingsTab')}</span>
               </button>
 
               <button
                 onClick={() => setActiveTab('backup')}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition ${
-                  activeTab === 'backup' ? 'bg-cyan-500 text-slate-950' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap shrink-0 ${
+                  activeTab === 'backup' ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
                 }`}
               >
                 <Download className="h-3.5 w-3.5" />
-                <span>גיבוי ואיפוס</span>
+                <span>{t('backupTab')}</span>
               </button>
 
               <button
@@ -301,76 +327,83 @@ export default function AdminPanel({
                   setIsAuthenticated(false);
                   onClose();
                 }}
-                className="mr-auto px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold hover:bg-red-500/20 transition"
+                className="mr-auto shrink-0 px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold hover:bg-red-500/20 transition whitespace-nowrap"
               >
-                יציאה מניהול
+                {t('logoutBtn')}
               </button>
             </div>
 
-            {/* Tab 1: Products Table */}
+            {/* Tab 1: Mobile-Optimized Products List */}
             {activeTab === 'products' && (
-              <div className="flex-1 overflow-y-auto p-6">
+              <div className="flex-1 overflow-y-auto p-3.5 sm:p-6">
                 <div className="space-y-3">
-                  {products.map((item) => (
-                    <div key={item.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl bg-slate-950/80 border border-slate-800 gap-4 hover:border-cyan-500/30 transition">
-                      <div className="flex items-center gap-4">
-                        <img src={item.image} alt={item.title} className="w-14 h-14 rounded-xl object-cover border border-slate-800 shrink-0" />
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h4 className="font-bold text-sm text-white">{item.title}</h4>
-                            <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800">
-                              {item.categoryName}
-                            </span>
-                            <span className="text-[10px] font-mono text-slate-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
-                              {item.versionText || (Array.isArray(item.revitVersions) ? `Revit ${item.revitVersions[0]}+` : `Revit ${item.revitVersions}`)}
-                            </span>
-                          </div>
-                          <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">{item.shortDescription}</p>
-                          <div className="text-xs font-mono font-bold text-slate-200 mt-1">
-                            {item.isService ? 'לפי הצעת מחיר' : `${item.price} ₪`}
+                  {products.map((item) => {
+                    const itemTitle = isEn && item.titleEn ? item.titleEn : item.title;
+                    const categoryName = isEn && item.categoryNameEn ? item.categoryNameEn : item.categoryName;
+                    const priceText = item.isService ? (isEn && item.priceLabelEn ? item.priceLabelEn : (item.priceLabel || 'Custom Quote')) : `${item.price} ₪`;
+
+                    return (
+                      <div key={item.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-slate-950/80 border border-slate-800 gap-3 hover:border-cyan-500/30 transition">
+                        <div className="flex items-start sm:items-center gap-3 w-full sm:w-auto">
+                          <img src={item.image} alt={itemTitle} className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl object-cover border border-slate-800 shrink-0 mt-0.5 sm:mt-0" />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                              <h4 className="font-bold text-xs sm:text-sm text-white leading-snug">{itemTitle}</h4>
+                              <span className="text-[9px] font-mono text-cyan-400 bg-cyan-950 px-1.5 py-0.5 rounded border border-cyan-800">
+                                {categoryName}
+                              </span>
+                              <span className="text-[9px] font-mono text-slate-300 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">
+                                {item.versionText || (Array.isArray(item.revitVersions) ? `Revit ${item.revitVersions[0]}+` : `Revit ${item.revitVersions}`)}
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-slate-400 line-clamp-1">{isEn && item.shortDescriptionEn ? item.shortDescriptionEn : item.shortDescription}</p>
+                            <div className="text-xs font-mono font-bold text-cyan-300 mt-1">
+                              {priceText}
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
-                        <button
-                          onClick={() => startEdit(item)}
-                          className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-800 text-cyan-300 hover:bg-slate-700 text-xs font-bold transition"
-                        >
-                          <Edit3 className="h-3.5 w-3.5" />
-                          <span>ערוך</span>
-                        </button>
+                        {/* Full Mobile Action Buttons */}
+                        <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-900">
+                          <button
+                            onClick={() => startEdit(item)}
+                            className="flex-1 sm:flex-initial flex items-center justify-center gap-1 px-3 py-1.5 rounded-lg bg-slate-800 text-cyan-300 hover:bg-slate-700 text-xs font-bold transition"
+                          >
+                            <Edit3 className="h-3.5 w-3.5" />
+                            <span>{isEn ? 'Edit' : 'ערוך'}</span>
+                          </button>
 
-                        <button
-                          onClick={() => {
-                            if (confirm(`האם למחוק את המוצר "${item.title}"?`)) {
-                              onDeleteProduct(item.id);
-                              showToast('המוצר נמחק');
-                            }
-                          }}
-                          className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 text-xs font-bold transition"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                          <span>מחק</span>
-                        </button>
+                          <button
+                            onClick={() => {
+                              if (confirm(isEn ? `Delete product "${itemTitle}"?` : `האם למחוק את המוצר "${itemTitle}"?`)) {
+                                onDeleteProduct(item.id);
+                                showToast(isEn ? 'Product deleted' : 'המוצר נמחק');
+                              }
+                            }}
+                            className="flex-1 sm:flex-initial flex items-center justify-center gap-1 px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 text-xs font-bold transition"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                            <span>{isEn ? 'Delete' : 'מחק'}</span>
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
 
-            {/* Tab 2: Add/Edit Product Form */}
+            {/* Tab 2: Mobile-Responsive Add/Edit Product Form */}
             {activeTab === 'add' && (
-              <div className="flex-1 overflow-y-auto p-6">
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6">
                 <form onSubmit={handleSubmitProduct} className="space-y-4 max-w-2xl mx-auto">
-                  <h3 className="text-sm font-bold text-cyan-400 border-b border-slate-800 pb-2">
-                    {editingId ? `עריכת מוצר: ${formData.title}` : 'הוספת מוצר/שירות חדש לקטלוג'}
+                  <h3 className="text-xs sm:text-sm font-bold text-cyan-400 border-b border-slate-800 pb-2">
+                    {editingId ? (isEn ? `Edit Product: ${formData.titleEn || formData.title}` : `עריכת מוצר: ${formData.title}`) : (isEn ? 'Add New Product / Service' : 'הוספת מוצר/שירות חדש לקטלוג')}
                   </h3>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-slate-300 mb-1">שם המוצר/השירות *</label>
+                      <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'Product Name (Hebrew) *' : 'שם המוצר/השירות (בעברית) *'}</label>
                       <input
                         type="text"
                         required
@@ -382,28 +415,52 @@ export default function AdminPanel({
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-300 mb-1">קטגוריה *</label>
+                      <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'Product Name (English)' : 'שם המוצר (באנגלית)'}</label>
+                      <input
+                        type="text"
+                        value={formData.titleEn}
+                        onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
+                        className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
+                        placeholder="e.g. Sheet Generator Pro"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'Category *' : 'קטגוריה *'}</label>
                       <select
                         value={formData.category}
                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                         className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
                       >
                         {CATEGORIES.filter(c => c.id !== 'all').map(c => (
-                          <option key={c.id} value={c.id}>{c.name}</option>
+                          <option key={c.id} value={c.id}>{isEn && c.nameEn ? c.nameEn : c.name}</option>
                         ))}
                       </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'File / Tool Type' : 'סוג הקובץ / כלי'}</label>
+                      <input
+                        type="text"
+                        value={formData.type}
+                        onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                        className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
+                        placeholder="C# Add-in / pyRevit Script"
+                      />
                     </div>
                   </div>
 
                   {/* Revit Supported Versions Edit Section */}
                   <div className="p-3.5 rounded-xl bg-slate-950/80 border border-cyan-500/20 space-y-2">
                     <label className="block text-xs font-bold text-cyan-400">
-                      גרסת תמיכה ברוויט (Revit Version Tag) *
+                      {isEn ? 'Supported Revit Version Tag *' : 'גרסת תמיכה ברוויט (Revit Version Tag) *'}
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="למשל: Revit 2022+ או Revit 2021-2025"
+                      placeholder="e.g. Revit 2022+ or Revit 2021-2025"
                       value={formData.versionText}
                       onChange={(e) => setFormData({ ...formData, versionText: e.target.value })}
                       className="w-full bg-slate-900 border border-slate-800 text-white font-mono font-bold text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-cyan-500"
@@ -411,7 +468,7 @@ export default function AdminPanel({
 
                     {/* Quick Preset Buttons */}
                     <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                      <span className="text-[11px] text-slate-400">בחירה מהירה:</span>
+                      <span className="text-[11px] text-slate-400">{isEn ? 'Quick presets:' : 'בחירה מהירה:'}</span>
                       {['Revit 2021+', 'Revit 2022+', 'Revit 2023+', 'Revit 2024+', 'Revit 2025', 'Revit 2021-2025'].map((preset) => (
                         <button
                           key={preset}
@@ -429,22 +486,22 @@ export default function AdminPanel({
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-slate-300 mb-1">סוג התמחור</label>
+                      <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'Pricing Type' : 'סוג התמחור'}</label>
                       <select
                         value={formData.isService ? 'service' : 'price'}
                         onChange={(e) => setFormData({ ...formData, isService: e.target.value === 'service' })}
                         className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
                       >
-                        <option value="price">מחיר קבוע (₪)</option>
-                        <option value="service">שירות (הצעת מחיר)</option>
+                        <option value="price">{isEn ? 'Fixed Price (₪)' : 'מחיר קבוע (₪)'}</option>
+                        <option value="service">{isEn ? 'Custom Service Quote' : 'שירות (הצעת מחיר)'}</option>
                       </select>
                     </div>
 
                     {!formData.isService ? (
                       <div>
-                        <label className="block text-xs font-bold text-slate-300 mb-1">מחיר (₪) *</label>
+                        <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'Price (₪) *' : 'מחיר (₪) *'}</label>
                         <input
                           type="number"
                           required
@@ -455,7 +512,7 @@ export default function AdminPanel({
                       </div>
                     ) : (
                       <div>
-                        <label className="block text-xs font-bold text-slate-300 mb-1">תווית מחיר</label>
+                        <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'Price Label' : 'תווית מחיר'}</label>
                         <input
                           type="text"
                           value={formData.priceLabel}
@@ -464,21 +521,10 @@ export default function AdminPanel({
                         />
                       </div>
                     )}
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-300 mb-1">סוג הקובץ / כלי</label>
-                      <input
-                        type="text"
-                        value={formData.type}
-                        onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                        className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
-                        placeholder="C# Add-in / pyRevit Script"
-                      />
-                    </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 mb-1">תיאור קצר בקטלוג *</label>
+                    <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'Short Description (Hebrew) *' : 'תיאור קצר בקטלוג (בעברית) *'}</label>
                     <input
                       type="text"
                       required
@@ -489,7 +535,17 @@ export default function AdminPanel({
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 mb-1">תיאור מורחב במודל הפרטים</label>
+                    <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'Short Description (English)' : 'תיאור קצר בקטלוג (באנגלית)'}</label>
+                    <input
+                      type="text"
+                      value={formData.shortDescriptionEn}
+                      onChange={(e) => setFormData({ ...formData, shortDescriptionEn: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'Extended Description' : 'תיאור מורחב במודל הפרטים'}</label>
                     <textarea
                       rows={3}
                       value={formData.description}
@@ -498,25 +554,15 @@ export default function AdminPanel({
                     ></textarea>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-slate-300 mb-1">תכונות מרכזיות (שורה נפרדת לכל תכונה)</label>
-                    <textarea
-                      rows={3}
-                      value={formData.features}
-                      onChange={(e) => setFormData({ ...formData, features: e.target.value })}
-                      className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
-                    ></textarea>
-                  </div>
-
                   {/* Image Selector: File Upload + URL input + Live Preview */}
                   <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
-                    <label className="block text-xs font-bold text-slate-300">תמונת המוצר / שירות *</label>
+                    <label className="block text-xs font-bold text-slate-300">{isEn ? 'Product Image *' : 'תמונת המוצר / שירות *'}</label>
                     
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                       {/* File Upload Input Button */}
                       <label className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 hover:text-white text-xs font-bold cursor-pointer transition shadow-sm">
                         <Upload className="h-4 w-4 text-cyan-400" />
-                        <span>בחר תמונה מהמחשב</span>
+                        <span>{isEn ? 'Choose image from computer' : 'בחר תמונה מהמחשב'}</span>
                         <input
                           type="file"
                           accept="image/*"
@@ -525,13 +571,13 @@ export default function AdminPanel({
                         />
                       </label>
 
-                      <span className="text-xs text-slate-500 text-center font-bold">או</span>
+                      <span className="text-xs text-slate-500 text-center font-bold">{isEn ? 'or' : 'או'}</span>
 
                       {/* URL input */}
                       <div className="flex-[2]">
                         <input
                           type="text"
-                          placeholder="הדבק קישור URL / נתיב תמונה"
+                          placeholder={isEn ? "Paste image URL or public path" : "הדבק קישור URL / נתיב תמונה"}
                           value={formData.image}
                           onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                           className="w-full bg-slate-900 border border-slate-800 text-slate-100 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-cyan-500"
@@ -542,11 +588,11 @@ export default function AdminPanel({
                     {/* Image Preview Box */}
                     {formData.image && (
                       <div className="flex items-center gap-3 pt-2 border-t border-slate-800/80">
-                        <span className="text-[11px] text-slate-400 font-bold">תצוגה מקדימה:</span>
+                        <span className="text-[11px] text-slate-400 font-bold">{isEn ? 'Preview:' : 'תצוגה מקדימה:'}</span>
                         <div className="relative group">
                           <img
                             src={formData.image}
-                            alt="תצוגה מקדימה"
+                            alt="Preview"
                             className="w-16 h-16 rounded-xl object-cover border border-cyan-500/40 shadow-md bg-slate-900"
                             onError={(e) => {
                               e.target.onerror = null;
@@ -561,17 +607,17 @@ export default function AdminPanel({
                   <div className="pt-4 flex items-center gap-3">
                     <button
                       type="submit"
-                      className="flex-1 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-extrabold text-xs shadow-lg transition"
+                      className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg transition"
                     >
-                      {editingId ? 'שמור שינויים במוצר' : 'אישור והוספת המוצר לקטלוג'}
+                      {editingId ? (isEn ? 'Save Product Changes' : 'שמור שינויים במוצר') : (isEn ? 'Add Product to Catalog' : 'אישור והוספת המוצר לקטלוג')}
                     </button>
                     {editingId && (
                       <button
                         type="button"
                         onClick={resetForm}
-                        className="px-4 py-3 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold"
+                        className="px-4 py-3.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold"
                       >
-                        ביטול
+                        {isEn ? 'Cancel' : 'ביטול'}
                       </button>
                     )}
                   </div>
@@ -581,16 +627,16 @@ export default function AdminPanel({
 
             {/* Tab 3: Store Settings */}
             {activeTab === 'settings' && (
-              <div className="flex-1 overflow-y-auto p-6 max-w-xl mx-auto space-y-6">
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 max-w-xl mx-auto space-y-6">
                 <form onSubmit={handleSaveSettings} className="space-y-4">
-                  <h3 className="text-sm font-bold text-cyan-400 border-b border-slate-800 pb-2 flex items-center gap-2">
+                  <h3 className="text-xs sm:text-sm font-bold text-cyan-400 border-b border-slate-800 pb-2 flex items-center gap-2">
                     <Settings className="h-4 w-4" />
-                    <span>הגדרות איש קשר ו-WhatsApp</span>
+                    <span>{isEn ? 'WhatsApp & PIN Settings' : 'הגדרות איש קשר ו-WhatsApp'}</span>
                   </h3>
 
                   <div>
                     <label className="block text-xs font-bold text-slate-300 mb-1">
-                      מספר טלפון לקבלת הודעות WhatsApp (כולל קידומת 972) *
+                      {isEn ? 'WhatsApp Order Number (with 972 country code) *' : 'מספר טלפון לקבלת הודעות WhatsApp (כולל קידומת 972) *'}
                     </label>
                     <input
                       type="text"
@@ -600,13 +646,10 @@ export default function AdminPanel({
                       onChange={(e) => setSettingsForm({ ...settingsForm, whatsappNumber: e.target.value })}
                       className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3.5 py-2.5 text-xs font-mono focus:outline-none focus:border-cyan-500"
                     />
-                    <span className="text-[10px] text-slate-400 mt-1 block">
-                      למשל: עבור 050-1234567 רשום: 972501234567 (ללא מניפסט וללא מוקף).
-                    </span>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 mb-1">כתובת אימייל ליצירת קשר</label>
+                    <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'Contact Email' : 'כתובת אימייל ליצירת קשר'}</label>
                     <input
                       type="email"
                       value={settingsForm.contactEmail}
@@ -616,7 +659,7 @@ export default function AdminPanel({
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 mb-1">שינוי קוד גישה (PIN) לניהול</label>
+                    <label className="block text-xs font-bold text-slate-300 mb-1">{isEn ? 'Change Admin PIN Code' : 'שינוי קוד גישה (PIN) לניהול'}</label>
                     <input
                       type="text"
                       value={settingsForm.adminPin}
@@ -627,9 +670,9 @@ export default function AdminPanel({
 
                   <button
                     type="submit"
-                    className="w-full py-3 rounded-xl bg-cyan-500 text-slate-950 font-extrabold text-xs shadow-lg transition"
+                    className="w-full py-3.5 rounded-xl bg-cyan-500 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg transition"
                   >
-                    שמור הגדרות חנות
+                    {isEn ? 'Save Settings' : 'שמור הגדרות חנות'}
                   </button>
                 </form>
               </div>
@@ -637,42 +680,42 @@ export default function AdminPanel({
 
             {/* Tab 4: Backup & Reset */}
             {activeTab === 'backup' && (
-              <div className="flex-1 overflow-y-auto p-6 max-w-xl mx-auto space-y-6">
-                <div className="p-6 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-4">
-                  <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 max-w-xl mx-auto space-y-6">
+                <div className="p-5 sm:p-6 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-4">
+                  <h3 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
                     <Download className="h-4 w-4 text-cyan-400" />
-                    <span>ייצוא גיבוי קטלוג (JSON)</span>
+                    <span>{isEn ? 'Export Catalog JSON Backup' : 'ייצוא גיבוי קטלוג (JSON)'}</span>
                   </h3>
                   <p className="text-xs text-slate-400">
-                    הורד את כל הנתונים, המוצרים וההגדרות כקובץ JSON לגבוי מלא.
+                    {isEn ? 'Download all products, data and settings as a full JSON backup file.' : 'הורד את כל הנתונים, המוצרים וההגדרות כקובץ JSON לגבוי מלא.'}
                   </p>
                   <button
                     onClick={handleExportBackup}
                     className="px-4 py-2.5 rounded-xl bg-slate-800 text-cyan-300 hover:bg-slate-700 text-xs font-bold transition flex items-center gap-2"
                   >
                     <Download className="h-4 w-4" />
-                    <span>הורד קובץ גיבוי כעת</span>
+                    <span>{isEn ? 'Download Backup Now' : 'הורד קובץ גיבוי כעת'}</span>
                   </button>
                 </div>
 
-                <div className="p-6 rounded-2xl bg-red-950/20 border border-red-500/20 space-y-4">
-                  <h3 className="text-sm font-bold text-red-400 flex items-center gap-2">
+                <div className="p-5 sm:p-6 rounded-2xl bg-red-950/20 border border-red-500/20 space-y-4">
+                  <h3 className="text-xs sm:text-sm font-bold text-red-400 flex items-center gap-2">
                     <RefreshCw className="h-4 w-4" />
-                    <span>איפוס לברירת מחדל</span>
+                    <span>{isEn ? 'Reset to Default Catalog' : 'איפוס לברירת מחדל'}</span>
                   </h3>
                   <p className="text-xs text-slate-400">
-                    איפוס הקטלוג חזרה לרשימת המוצרים וההגדרות המקוריות של האתר.
+                    {isEn ? 'Reset the catalog back to original initial website products.' : 'איפוס הקטלוג חזרה לרשימת המוצרים וההגדרות המקוריות של האתר.'}
                   </p>
                   <button
                     onClick={() => {
-                      if (confirm('האם אתה בטוח שברצונך לאפס את כל המוצרים לברירת המחדל?')) {
+                      if (confirm(isEn ? 'Reset all products to default?' : 'האם אתה בטוח שברצונך לאפס את כל המוצרים לברירת המחדל?')) {
                         onResetProducts();
-                        showToast('הנתונים אופסו לברירת המחדל');
+                        showToast(isEn ? 'Catalog reset to default' : 'הנתונים אופסו לברירת המחדל');
                       }
                     }}
                     className="px-4 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300 hover:bg-red-500/30 text-xs font-bold transition"
                   >
-                    אפס קטלוג לברירת מחדל
+                    {isEn ? 'Reset Catalog to Defaults' : 'אפס קטלוג לברירת מחדל'}
                   </button>
                 </div>
               </div>
