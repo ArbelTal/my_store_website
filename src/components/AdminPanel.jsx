@@ -208,22 +208,22 @@ export default function AdminPanel({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-5 overflow-y-auto bg-slate-950/85 backdrop-blur-md animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-1.5 sm:p-5 overflow-y-auto bg-slate-950/85 backdrop-blur-md animate-fade-in pt-3 pb-8 sm:py-6">
       
       <div 
-        className="relative w-full max-w-4xl bg-slate-900 border border-cyan-500/30 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[94vh]"
+        className="relative w-full max-w-4xl bg-slate-900 border border-cyan-500/30 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden my-0 sm:my-auto flex flex-col max-h-[96vh] sm:max-h-[92vh]"
         onClick={(e) => e.stopPropagation()}
       >
         
         {/* Modal Header */}
-        <div className="p-4 sm:p-6 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 shrink-0">
-              <Lock className="h-5 w-5" />
+        <div className="p-3 sm:p-6 bg-slate-950 border-b border-slate-800 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="p-1.5 sm:p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 shrink-0">
+              <Lock className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
             <div>
-              <h2 className="font-heading font-extrabold text-base sm:text-xl text-white">{t('adminTitle')}</h2>
-              <span className="text-[11px] sm:text-xs text-cyan-400 font-mono hidden sm:inline-block">{t('adminSubtitle')}</span>
+              <h2 className="font-heading font-extrabold text-sm sm:text-xl text-white">{t('adminTitle')}</h2>
+              <span className="text-[10px] sm:text-xs text-cyan-400 font-mono hidden sm:inline-block">{t('adminSubtitle')}</span>
             </div>
           </div>
 
@@ -232,9 +232,9 @@ export default function AdminPanel({
               setIsAuthenticated(false);
               onClose();
             }}
-            className="p-2 rounded-full bg-slate-900 text-slate-400 hover:text-white transition"
+            className="p-1.5 sm:p-2 rounded-full bg-slate-900 text-slate-400 hover:text-white transition"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
         </div>
 
@@ -282,7 +282,7 @@ export default function AdminPanel({
           <div className="flex-1 flex flex-col overflow-hidden">
             
             {/* Admin Tabs Header - Mobile Horizontally Scrollable Bar */}
-            <div className="flex items-center gap-1.5 p-2.5 sm:p-3 bg-slate-950/90 border-b border-slate-800 overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-1.5 p-2 sm:p-3 bg-slate-950 border-b border-slate-800 overflow-x-auto scrollbar-none shrink-0 w-full">
               <button
                 onClick={() => { setActiveTab('products'); resetForm(); }}
                 className={`px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap shrink-0 ${
