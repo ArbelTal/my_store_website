@@ -9,8 +9,7 @@ import CartDrawer from './components/CartDrawer';
 import AboutServices from './components/AboutServices';
 import Footer from './components/Footer';
 import AdminPanel from './components/AdminPanel';
-import { Cpu, Code, Box, Layers, ChevronRight, ChevronLeft } from 'lucide-react';
-import { CATEGORIES, PRODUCTS as INITIAL_PRODUCTS } from './data/products';
+import { PRODUCTS as INITIAL_PRODUCTS } from './data/products';
 import { translations } from './i18n/translations';
 
 export default function App() {
@@ -247,7 +246,7 @@ export default function App() {
           totalResults={filteredProducts.length}
         />
 
-        {/* Product Cards Container (Mobile Category Carousels vs Desktop Grid) */}
+        {/* Product Cards Grid */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {filteredProducts.length === 0 ? (
             <div className="text-center py-20 bg-slate-900/50 rounded-3xl border border-slate-800">
@@ -262,84 +261,7 @@ export default function App() {
                 {t('resetFilters')}
               </button>
             </div>
-          ) : activeCategory === 'all' && !searchQuery ? (
-            <>
-              {/* Desktop Responsive Grid (Hidden on Mobile) */}
-              <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    lang={lang}
-                    t={t}
-                    product={product}
-                    onQuickView={(p) => setSelectedProductModal(p)}
-                    onAddToCart={(p) => handleAddToCart(p, 1)}
-                    isInCart={cartItems.some((item) => item.id === product.id)}
-                  />
-                ))}
-              </div>
-
-              {/* Mobile Category Carousels Layout (Visible ONLY on Mobile screens) */}
-              <div className="sm:hidden space-y-8 pt-2">
-                {CATEGORIES.filter(c => c.id !== 'all').map((cat) => {
-                  const catProducts = products.filter(p => p.category === cat.id);
-                  if (catProducts.length === 0) return null;
-
-                  const catName = isEn && cat.nameEn ? cat.nameEn : cat.name;
-
-                  return (
-                    <div key={cat.id} className="space-y-3">
-                      {/* Category Header Bar */}
-                      <div className="flex items-center justify-between px-1">
-                        <div className="flex items-center gap-2">
-                          <div className="p-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 shrink-0">
-                            {cat.id === 'plugins' && <Cpu className="h-4 w-4" />}
-                            {cat.id === 'pyrevit' && <Code className="h-4 w-4" />}
-                            {cat.id === 'templates-families' && <Box className="h-4 w-4" />}
-                            {cat.id === 'services' && <Layers className="h-4 w-4" />}
-                          </div>
-                          <h3 className="font-extrabold text-sm text-white">{catName}</h3>
-                          <span className="text-[10px] font-mono text-cyan-300 bg-cyan-950 px-2 py-0.5 rounded-full border border-cyan-800">
-                            {catProducts.length}
-                          </span>
-                        </div>
-
-                        <button
-                          onClick={() => {
-                            setActiveCategory(cat.id);
-                            scrollToCatalog();
-                          }}
-                          className="text-xs font-bold text-cyan-400 hover:underline flex items-center gap-1"
-                        >
-                          <span>{isEn ? 'View all' : 'הצג הכל'}</span>
-                          {isRtl ? <ChevronLeft className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
-                        </button>
-                      </div>
-
-                      {/* Horizontal Touch Swipe Track */}
-                      <div className="flex overflow-x-auto gap-3.5 pb-4 pt-1 px-1 -mx-4 scrollbar-none snap-x snap-mandatory">
-                        <div className="shrink-0 w-3"></div>
-                        {catProducts.map((product) => (
-                          <div key={product.id} className="w-[82vw] max-w-[310px] shrink-0 snap-start">
-                            <ProductCard
-                              lang={lang}
-                              t={t}
-                              product={product}
-                              onQuickView={(p) => setSelectedProductModal(p)}
-                              onAddToCart={(p) => handleAddToCart(p, 1)}
-                              isInCart={cartItems.some((item) => item.id === product.id)}
-                            />
-                          </div>
-                        ))}
-                        <div className="shrink-0 w-3"></div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </>
           ) : (
-            /* Single Category / Search Results Grid */
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProducts.map((product) => (
                 <ProductCard

@@ -6,7 +6,7 @@ export const translations = {
     admin: "ניהול",
     
     // Hero
-    heroBadge: "תומך בגרסאות Revit 2021-2027 & pyRevit",
+    heroBadge: "תומך בגרסאות Revit 2021-2025 & pyRevit",
     heroTitleLine1: "חנות התוספים והאוטומציות",
     heroTitleLine2: "לתוכנת Autodesk Revit",
     heroSubtitle: "הפוך את עבודת המידול ברוויט למהירה, מדויקת ואוטומטית לחלוטין. תוספי C# מוכנים, סקריפטים ל-pyRevit, תבניות משרדיות תקניות ושירותי מידול BIM מותאמים אישית.",
@@ -119,7 +119,7 @@ export const translations = {
     admin: "Admin",
 
     // Hero
-    heroBadge: "Supports Revit 2021-2027 & pyRevit",
+    heroBadge: "Supports Revit 2021-2025 & pyRevit",
     heroTitleLine1: "Plugins & Automations Store",
     heroTitleLine2: "for Autodesk Revit",
     heroSubtitle: "Make your Revit modeling fast, accurate, and completely automated. Production-ready C# Add-ins, pyRevit scripts, office templates, and custom BIM services.",
