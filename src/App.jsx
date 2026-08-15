@@ -233,7 +233,7 @@ export default function App() {
   const totalCartItemCount = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950 transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950 transition-colors duration-300 overflow-x-hidden w-full max-w-full relative">
       
       {/* Top Header */}
       <Header

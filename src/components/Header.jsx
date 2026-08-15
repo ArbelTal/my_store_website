@@ -20,27 +20,27 @@ export default function Header({
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-cyan-500/15 bg-white/90 dark:bg-slate-950/85 backdrop-blur-xl transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4">
           
           {/* Brand Logo & Name */}
-          <div className="flex items-center gap-3 cursor-pointer group shrink-0" onClick={() => onSelectCategory('all')}>
+          <div className="flex items-center gap-2 sm:gap-3 cursor-pointer group shrink-0" onClick={() => onSelectCategory('all')}>
             <img 
               src="/logo.png" 
               alt="Revit Tools Logo" 
-              className="h-10 w-auto object-contain drop-shadow-[0_0_12px_rgba(0,163,255,0.4)] group-hover:scale-105 transition-transform" 
+              className="h-8 sm:h-10 w-auto object-contain drop-shadow-[0_0_12px_rgba(0,163,255,0.4)] group-hover:scale-105 transition-transform" 
             />
             <div className="flex flex-col">
-              <span className="font-heading font-extrabold text-lg text-slate-900 dark:text-white tracking-wide leading-tight group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
+              <span className="font-heading font-extrabold text-base sm:text-lg text-slate-900 dark:text-white tracking-wide leading-tight group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
                 REVIT<span className="text-cyan-500">TOOLS</span>
               </span>
-              <span className="text-[10px] text-cyan-600 dark:text-cyan-300/70 font-mono tracking-wider whitespace-nowrap">
+              <span className="text-[9px] sm:text-[10px] text-cyan-600 dark:text-cyan-300/70 font-mono tracking-wider whitespace-nowrap hidden sm:block">
                 PLUGINS & BIM SERVICES
               </span>
             </div>
           </div>
 
-          {/* Navigation Links */}
+          {/* Navigation Links (Desktop only) */}
           <nav className="hidden lg:flex items-center gap-1 bg-slate-100 dark:bg-slate-900/60 p-1.5 rounded-full border border-slate-200 dark:border-slate-800 shrink-0">
             <button
               onClick={() => onSelectCategory('all')}
@@ -95,9 +95,9 @@ export default function Header({
           </nav>
 
           {/* Quick Search, Theme Switcher, Language Switcher & Actions */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             
-            {/* Search Input */}
+            {/* Search Input (Desktop only) */}
             <div className="relative hidden xl:block w-48 xl:w-56">
               <input
                 type="text"
@@ -114,7 +114,7 @@ export default function Header({
             {/* Theme Toggle Button (Light/Dark) */}
             <button
               onClick={() => setTheme(isDark ? 'light' : 'dark')}
-              className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 text-amber-500 dark:text-cyan-300 hover:border-cyan-400 hover:bg-slate-200 dark:hover:bg-slate-800 text-xs transition shadow-sm"
+              className="flex items-center justify-center p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 text-amber-500 dark:text-cyan-300 hover:border-cyan-400 hover:bg-slate-200 dark:hover:bg-slate-800 text-xs transition shadow-sm"
               title={isDark ? t('themeLight') : t('themeDark')}
             >
               {isDark ? (
@@ -127,22 +127,22 @@ export default function Header({
             {/* Language Switcher Toggle */}
             <button
               onClick={() => setLang(lang === 'he' ? 'en' : 'he')}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 text-cyan-600 dark:text-cyan-300 hover:border-cyan-400 hover:bg-slate-200 dark:hover:bg-slate-800 text-xs font-mono font-extrabold transition shadow-sm"
+              className="flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 text-cyan-600 dark:text-cyan-300 hover:border-cyan-400 hover:bg-slate-200 dark:hover:bg-slate-800 text-xs font-mono font-extrabold transition shadow-sm"
               title={lang === 'he' ? 'Switch to English' : 'עבור לעברית'}
             >
-              <Globe className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />
+              <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cyan-500 dark:text-cyan-400" />
               <span>{lang === 'he' ? 'עב' : 'EN'}</span>
             </button>
 
             {/* Cart Drawer Trigger */}
             <button
               onClick={onOpenCart}
-              className="relative flex items-center justify-center p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-400 transition group"
+              className="relative flex items-center justify-center p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-400 transition group"
               title={t('cart')}
             >
-              <ShoppingBag className="h-5 w-5 group-hover:scale-110 transition-transform" />
+              <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5 group-hover:scale-110 transition-transform" />
               {cartCount > 0 && (
-                <span className="absolute -top-2 -left-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 text-xs font-black w-5 h-5 rounded-full flex items-center justify-center shadow-lg shadow-cyan-500/50 animate-bounce">
+                <span className="absolute -top-1.5 -left-1.5 bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 text-[10px] sm:text-xs font-black w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shadow-lg shadow-cyan-500/50 animate-bounce">
                   {cartCount}
                 </span>
               )}
@@ -151,10 +151,10 @@ export default function Header({
             {/* Admin Panel Trigger */}
             <button
               onClick={onOpenAdmin}
-              className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-300 hover:border-cyan-500/30 transition"
+              className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-300 hover:border-cyan-500/30 transition"
               title={t('admin')}
             >
-              <Lock className="h-5 w-5" />
+              <Lock className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
 
           </div>
