@@ -19,6 +19,7 @@ export default function ProductModal({ lang, t, product, onClose, onAddToCart, i
   const features = isEn && product.featuresEn ? product.featuresEn : product.features;
   const systemRequirements = isEn && product.systemRequirementsEn ? product.systemRequirementsEn : product.systemRequirements;
   const priceLabel = isEn && product.priceLabelEn ? product.priceLabelEn : (product.priceLabel || t('customQuote'));
+  const type = isEn && product.typeEn ? product.typeEn : product.type;
 
   const {
     category,
@@ -27,7 +28,6 @@ export default function ProductModal({ lang, t, product, onClose, onAddToCart, i
     currency,
     isService,
     revitVersions,
-    type,
     image,
     tags
   } = product;
