@@ -42,11 +42,30 @@ export default function App() {
     return text;
   };
 
-  // Load products from localStorage or default
+  // Load products from localStorage or default with latest English translations merged
   const [products, setProducts] = useState(() => {
     try {
-      const saved = localStorage.getItem('revit_store_products');
-      return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+      const saved = localStorage.getItem('revit_store_products_v3') || localStorage.getItem('revit_store_products');
+      if (!saved) return INITIAL_PRODUCTS;
+      const parsed = JSON.parse(saved);
+      return parsed.map((savedProd) => {
+        const initialMatch = INITIAL_PRODUCTS.find((p) => p.id === savedProd.id);
+        if (initialMatch) {
+          return {
+            ...savedProd,
+            titleEn: initialMatch.titleEn || savedProd.titleEn || savedProd.title,
+            categoryNameEn: initialMatch.categoryNameEn || savedProd.categoryNameEn || savedProd.categoryName,
+            badgeEn: initialMatch.badgeEn || savedProd.badgeEn || savedProd.badge,
+            shortDescriptionEn: initialMatch.shortDescriptionEn || savedProd.shortDescriptionEn || savedProd.shortDescription,
+            descriptionEn: initialMatch.descriptionEn || savedProd.descriptionEn || savedProd.description,
+            featuresEn: initialMatch.featuresEn || savedProd.featuresEn || savedProd.features,
+            systemRequirementsEn: initialMatch.systemRequirementsEn || savedProd.systemRequirementsEn || savedProd.systemRequirements,
+            typeEn: initialMatch.typeEn || savedProd.typeEn || savedProd.type,
+            priceLabelEn: initialMatch.priceLabelEn || savedProd.priceLabelEn || savedProd.priceLabel
+          };
+        }
+        return savedProd;
+      });
     } catch (e) {
       return INITIAL_PRODUCTS;
     }
@@ -80,6 +99,7 @@ export default function App() {
   // Save products to localStorage on change
   useEffect(() => {
     try {
+      localStorage.setItem('revit_store_products_v3', JSON.stringify(products));
       localStorage.setItem('revit_store_products', JSON.stringify(products));
     } catch (e) {
       console.error('Failed to save products to localStorage', e);
