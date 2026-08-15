@@ -277,7 +277,7 @@ export const PRODUCTS = [
     ],
     systemRequirements: 'מתאים לכל גודל משרד',
     systemRequirementsEn: 'Suitable for any office size',
-    image: 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80',
     tags: ['BIM Consulting', 'Template Creation', 'Office Standard', 'Workflow'],
     downloadUrl: '#'
   },
