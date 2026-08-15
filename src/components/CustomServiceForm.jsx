@@ -178,6 +178,8 @@ ${formData.details}`;
                     onChange={(e) => setFormData({ ...formData, revitVersion: e.target.value })}
                     className="bg-slate-950 border border-slate-800 text-slate-200 text-xs rounded-lg px-2 py-1 focus:outline-none focus:border-cyan-500"
                   >
+                    <option value="2027">2027</option>
+                    <option value="2026">2026</option>
                     <option value="2025">2025</option>
                     <option value="2024">2024</option>
                     <option value="2023">2023</option>

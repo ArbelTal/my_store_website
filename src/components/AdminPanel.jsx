@@ -60,7 +60,7 @@ export default function AdminPanel({
     priceLabelEn: 'Custom Quote',
     isService: false,
     versionText: 'Revit 2022+',
-    revitVersions: ['2022', '2023', '2024', '2025'],
+    revitVersions: ['2022', '2023', '2024', '2025', '2026', '2027'],
     type: 'C# Add-in',
     shortDescription: '',
     shortDescriptionEn: '',
@@ -68,8 +68,8 @@ export default function AdminPanel({
     descriptionEn: '',
     features: '',
     featuresEn: '',
-    systemRequirements: 'רוויט 2022-2025, Windows 10/11',
-    systemRequirementsEn: 'Revit 2022-2025, Windows 10/11',
+    systemRequirements: 'רוויט 2022-2027, Windows 10/11',
+    systemRequirementsEn: 'Revit 2022-2027, Windows 10/11',
     image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80',
     tags: 'Revit, Automation, BIM'
   });
@@ -217,7 +217,7 @@ export default function AdminPanel({
       priceLabelEn: 'Custom Quote',
       isService: false,
       versionText: 'Revit 2022+',
-      revitVersions: ['2022', '2023', '2024', '2025'],
+      revitVersions: ['2022', '2023', '2024', '2025', '2026', '2027'],
       type: 'C# Add-in',
       shortDescription: '',
       shortDescriptionEn: '',
@@ -225,8 +225,8 @@ export default function AdminPanel({
       descriptionEn: '',
       features: '',
       featuresEn: '',
-      systemRequirements: 'רוויט 2022-2025, Windows 10/11',
-      systemRequirementsEn: 'Revit 2022-2025, Windows 10/11',
+      systemRequirements: 'רוויט 2022-2027, Windows 10/11',
+      systemRequirementsEn: 'Revit 2022-2027, Windows 10/11',
       image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80',
       tags: 'Revit, Automation, BIM'
     });
@@ -658,7 +658,7 @@ export default function AdminPanel({
                     {/* Quick Preset Buttons */}
                     <div className="flex flex-wrap items-center gap-1.5 pt-1">
                       <span className="text-[11px] text-slate-400">{isEn ? 'Quick presets:' : 'בחירה מהירה:'}</span>
-                      {['Revit 2021+', 'Revit 2022+', 'Revit 2023+', 'Revit 2024+', 'Revit 2025', 'Revit 2021-2025'].map((preset) => (
+                      {['Revit 2021+', 'Revit 2022+', 'Revit 2023+', 'Revit 2024+', 'Revit 2025+', 'Revit 2026+', 'Revit 2027', 'Revit 2021-2027', 'Revit 2022-2027', 'Revit 2025-2027'].map((preset) => (
                         <button
                           key={preset}
                           type="button"
