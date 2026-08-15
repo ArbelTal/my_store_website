@@ -327,22 +327,22 @@ export default function AdminPanel({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-1.5 sm:p-5 overflow-y-auto bg-slate-950/85 backdrop-blur-md animate-fade-in pt-3 pb-8 sm:py-6">
+    <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-1.5 sm:p-5 overflow-y-auto bg-slate-950/70 dark:bg-slate-950/85 backdrop-blur-md animate-fade-in pt-3 pb-8 sm:py-6">
       
       <div 
-        className="relative w-full max-w-4xl bg-slate-900 border border-cyan-500/30 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden my-0 sm:my-auto flex flex-col max-h-[96vh] sm:max-h-[92vh]"
+        className="relative w-full max-w-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden my-0 sm:my-auto flex flex-col max-h-[96vh] sm:max-h-[92vh] text-slate-900 dark:text-slate-100 transition-colors"
         onClick={(e) => e.stopPropagation()}
       >
         
         {/* Modal Header */}
-        <div className="p-3 sm:p-6 bg-slate-950 border-b border-slate-800 flex items-center justify-between shrink-0">
+        <div className="p-3 sm:p-6 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5 sm:gap-3">
-            <div className="p-1.5 sm:p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 shrink-0">
-              <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-400" />
+            <div className="p-1.5 sm:p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-400 shrink-0">
+              <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-600 dark:text-cyan-400" />
             </div>
             <div>
-              <h2 className="font-heading font-extrabold text-sm sm:text-xl text-white">{t('adminTitle')}</h2>
-              <span className="text-[10px] sm:text-xs text-cyan-400 font-mono hidden sm:inline-block">{t('adminSubtitle')}</span>
+              <h2 className="font-heading font-extrabold text-sm sm:text-xl text-slate-900 dark:text-white">{t('adminTitle')}</h2>
+              <span className="text-[10px] sm:text-xs text-cyan-600 dark:text-cyan-400 font-mono hidden sm:inline-block">{t('adminSubtitle')}</span>
             </div>
           </div>
 
@@ -351,7 +351,7 @@ export default function AdminPanel({
               setIsAuthenticated(false);
               onClose();
             }}
-            className="p-1.5 sm:p-2 rounded-full bg-slate-900 text-slate-400 hover:text-white transition"
+            className="p-1.5 sm:p-2 rounded-full bg-slate-200 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition"
           >
             <X className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
@@ -481,11 +481,11 @@ export default function AdminPanel({
           <div className="flex-1 flex flex-col overflow-hidden">
             
             {/* Admin Tabs Header - Mobile Horizontally Scrollable Bar */}
-            <div className="flex items-center gap-1.5 p-2 sm:p-3 bg-slate-950 border-b border-slate-800 overflow-x-auto scrollbar-none shrink-0 w-full">
+            <div className="flex items-center gap-1.5 p-2 sm:p-3 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 overflow-x-auto scrollbar-none shrink-0 w-full">
               <button
                 onClick={() => { setActiveTab('products'); resetForm(); }}
                 className={`px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap shrink-0 ${
-                  activeTab === 'products' ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
+                  activeTab === 'products' ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
                 {t('productListTab')} ({products.length})
@@ -494,7 +494,7 @@ export default function AdminPanel({
               <button
                 onClick={() => { setActiveTab('add'); resetForm(); }}
                 className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap shrink-0 ${
-                  activeTab === 'add' ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
+                  activeTab === 'add' ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -504,7 +504,7 @@ export default function AdminPanel({
               <button
                 onClick={() => setActiveTab('settings')}
                 className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap shrink-0 ${
-                  activeTab === 'settings' ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
+                  activeTab === 'settings' ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
                 <Settings className="h-3.5 w-3.5" />
@@ -514,7 +514,7 @@ export default function AdminPanel({
               <button
                 onClick={() => setActiveTab('backup')}
                 className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap shrink-0 ${
-                  activeTab === 'backup' ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
+                  activeTab === 'backup' ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
                 <Download className="h-3.5 w-3.5" />

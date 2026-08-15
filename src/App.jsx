@@ -33,6 +33,31 @@ export default function App() {
     }
   }, [lang]);
 
+  // Theme state ('dark' | 'light')
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem('revit_store_theme') || 'dark';
+    } catch (e) {
+      return 'dark';
+    }
+  });
+
+  // Sync theme class on HTML element
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+    }
+    try {
+      localStorage.setItem('revit_store_theme', theme);
+    } catch (e) {
+      console.error('Failed to save theme preference', e);
+    }
+  }, [theme]);
+
   // Translation lookup helper
   const t = (key, params = {}) => {
     let text = translations[lang]?.[key] || translations.he?.[key] || key;
@@ -208,12 +233,14 @@ export default function App() {
   const totalCartItemCount = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950 transition-colors duration-300">
       
       {/* Top Header */}
       <Header
         lang={lang}
         setLang={setLang}
+        theme={theme}
+        setTheme={setTheme}
         t={t}
         cartCount={totalCartItemCount}
         onOpenCart={() => setIsCartOpen(true)}

@@ -4,6 +4,8 @@ export const translations = {
     searchPlaceholder: "חפש תוסף, סקריפט או שירות...",
     cart: "סל קניות",
     admin: "ניהול",
+    themeLight: "מצב בהיר",
+    themeDark: "מצב כהה",
     
     // Hero
     heroBadge: "תומך בגרסאות Revit 2021-2025 & pyRevit",
@@ -117,6 +119,8 @@ export const translations = {
     searchPlaceholder: "Search plugin, script or service...",
     cart: "Cart",
     admin: "Admin",
+    themeLight: "Light Mode",
+    themeDark: "Dark Mode",
 
     // Hero
     heroBadge: "Supports Revit 2021-2025 & pyRevit",

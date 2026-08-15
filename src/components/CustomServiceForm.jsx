@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Wrench, Code, Layers, Box, FileSpreadsheet, MessageSquare } from 'lucide-react';
+import { Wrench, Send, Code, Layers, FileSpreadsheet, Box, MessageSquare } from 'lucide-react';
 
 export default function CustomServiceForm({ lang, t, settings }) {
   const [serviceType, setServiceType] = useState('pyrevit');
@@ -41,7 +41,7 @@ ${formData.details}`;
   };
 
   return (
-    <section id="custom-service" className="py-16 md:py-24 relative overflow-hidden border-t border-cyan-500/10">
+    <section id="custom-service" className="py-16 md:py-24 relative overflow-hidden border-t border-slate-200 dark:border-cyan-500/10 transition-colors">
       
       {/* Background Accent */}
       <div className="absolute right-0 bottom-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
@@ -50,26 +50,26 @@ ${formData.details}`;
         
         {/* Section Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-400 text-xs font-bold mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 dark:bg-cyan-950/80 border border-cyan-200 dark:border-cyan-500/30 text-cyan-700 dark:text-cyan-400 text-xs font-bold mb-3 shadow-sm">
             <Wrench className="h-3.5 w-3.5" />
             <span>{isEn ? 'Custom Development' : 'התאמה אישית מלאה'}</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             {t('customFormTitle')}
           </h2>
-          <p className="text-slate-300 text-base max-w-2xl mx-auto mt-3">
+          <p className="text-slate-600 dark:text-slate-300 text-base max-w-2xl mx-auto mt-3">
             {t('customFormSubtitle')}
           </p>
         </div>
 
         {/* Form Container */}
-        <div className="bg-slate-900/90 border border-cyan-500/20 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-xl">
+        <div className="bg-white/95 dark:bg-slate-900/90 border border-slate-200 dark:border-cyan-500/20 rounded-3xl p-6 sm:p-10 shadow-xl dark:shadow-2xl backdrop-blur-xl transition-colors">
           
           <form onSubmit={handleSubmit} className="space-y-8">
             
             {/* Step 1: Select Service Type */}
             <div>
-              <label className="block text-sm font-bold text-slate-300 mb-3">
+              <label className="block text-sm font-bold text-slate-800 dark:text-slate-300 mb-3">
                 {t('serviceType')}
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
@@ -79,11 +79,11 @@ ${formData.details}`;
                   onClick={() => setServiceType('pyrevit')}
                   className={`flex flex-col items-center text-center p-4 rounded-2xl border transition-all ${
                     serviceType === 'pyrevit'
-                      ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-md shadow-cyan-500/10'
-                      : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                      ? 'bg-cyan-500/15 border-cyan-500 dark:border-cyan-400 text-cyan-700 dark:text-cyan-300 shadow-md shadow-cyan-500/10'
+                      : 'bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
-                  <Code className="h-7 w-7 text-cyan-400 mb-2" />
+                  <Code className="h-7 w-7 text-cyan-600 dark:text-cyan-400 mb-2" />
                   <span className="text-xs font-bold">{isEn ? 'pyRevit Automation' : 'אוטומציית pyRevit'}</span>
                 </button>
 
@@ -92,11 +92,11 @@ ${formData.details}`;
                   onClick={() => setServiceType('template')}
                   className={`flex flex-col items-center text-center p-4 rounded-2xl border transition-all ${
                     serviceType === 'template'
-                      ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-md shadow-cyan-500/10'
-                      : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                      ? 'bg-cyan-500/15 border-cyan-500 dark:border-cyan-400 text-cyan-700 dark:text-cyan-300 shadow-md shadow-cyan-500/10'
+                      : 'bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
-                  <FileSpreadsheet className="h-7 w-7 text-cyan-400 mb-2" />
+                  <FileSpreadsheet className="h-7 w-7 text-cyan-600 dark:text-cyan-400 mb-2" />
                   <span className="text-xs font-bold">{isEn ? 'Office Template' : 'תבנית משרדית'}</span>
                 </button>
 
@@ -105,11 +105,11 @@ ${formData.details}`;
                   onClick={() => setServiceType('families')}
                   className={`flex flex-col items-center text-center p-4 rounded-2xl border transition-all ${
                     serviceType === 'families'
-                      ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-md shadow-cyan-500/10'
-                      : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                      ? 'bg-cyan-500/15 border-cyan-500 dark:border-cyan-400 text-cyan-700 dark:text-cyan-300 shadow-md shadow-cyan-500/10'
+                      : 'bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
-                  <Box className="h-7 w-7 text-cyan-400 mb-2" />
+                  <Box className="h-7 w-7 text-cyan-600 dark:text-cyan-400 mb-2" />
                   <span className="text-xs font-bold">{isEn ? 'Revit Families' : 'משפחות Revit'}</span>
                 </button>
 
@@ -118,11 +118,11 @@ ${formData.details}`;
                   onClick={() => setServiceType('bim')}
                   className={`flex flex-col items-center text-center p-4 rounded-2xl border transition-all ${
                     serviceType === 'bim'
-                      ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-md shadow-cyan-500/10'
-                      : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                      ? 'bg-cyan-500/15 border-cyan-500 dark:border-cyan-400 text-cyan-700 dark:text-cyan-300 shadow-md shadow-cyan-500/10'
+                      : 'bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
-                  <Layers className="h-7 w-7 text-cyan-400 mb-2" />
+                  <Layers className="h-7 w-7 text-cyan-600 dark:text-cyan-400 mb-2" />
                   <span className="text-xs font-bold">{isEn ? 'BIM Modeling' : 'מידול BIM'}</span>
                 </button>
 
@@ -132,37 +132,37 @@ ${formData.details}`;
             {/* Step 2: Contact Info */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1.5">{t('fullName')}</label>
+                <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 mb-1.5">{t('fullName')}</label>
                 <input
                   type="text"
                   required
                   placeholder="John Doe"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-cyan-500 transition"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-slate-100 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-cyan-500 transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1.5">{t('phoneWhatsapp')}</label>
+                <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 mb-1.5">{t('phoneWhatsapp')}</label>
                 <input
                   type="tel"
                   required
                   placeholder="+1-555-0000"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-cyan-500 transition"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-slate-100 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-cyan-500 transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1.5">{t('emailAddress')}</label>
+                <label className="block text-xs font-bold text-slate-800 dark:text-slate-300 mb-1.5">{t('emailAddress')}</label>
                 <input
                   type="email"
                   placeholder="name@example.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-cyan-500 transition"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-slate-100 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-cyan-500 transition"
                 />
               </div>
             </div>
@@ -170,13 +170,13 @@ ${formData.details}`;
             {/* Step 3: Project Details */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-bold text-slate-300">{isEn ? 'Project Details & Specifications *' : 'תאור הפרויקט / הדרישות *'}</label>
+                <label className="block text-xs font-bold text-slate-800 dark:text-slate-300">{isEn ? 'Project Details & Specifications *' : 'תאור הפרויקט / הדרישות *'}</label>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-400">Revit Version:</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">Revit Version:</span>
                   <select
                     value={formData.revitVersion}
                     onChange={(e) => setFormData({ ...formData, revitVersion: e.target.value })}
-                    className="bg-slate-950 border border-slate-800 text-slate-200 text-xs rounded-lg px-2 py-1 focus:outline-none focus:border-cyan-500"
+                    className="bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-slate-200 text-xs rounded-lg px-2 py-1 focus:outline-none focus:border-cyan-500"
                   >
                     <option value="2027">2027</option>
                     <option value="2026">2026</option>
@@ -195,13 +195,13 @@ ${formData.details}`;
                 placeholder={isEn ? "Describe your manual task to automate, requested template specifications, or family details..." : "תאר את הפעולה הידנית שברצונך לאוטומט, סוג התבנית המבוקשת או מפרט המשפחה..."}
                 value={formData.details}
                 onChange={(e) => setFormData({ ...formData, details: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-3.5 text-sm focus:outline-none focus:border-cyan-500 transition"
+                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-slate-100 rounded-xl p-3.5 text-sm focus:outline-none focus:border-cyan-500 transition"
               ></textarea>
             </div>
 
             {/* Submit Button */}
             <div className="flex items-center justify-between pt-2">
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-slate-500 dark:text-slate-400">
                 {isEn ? '* Inquiry will be sent directly via WhatsApp for quick response' : '* הפנייה תשלח ישירות ל-WhatsApp לקבלת מענה מהיר'}
               </span>
               

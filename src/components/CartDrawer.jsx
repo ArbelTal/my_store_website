@@ -73,27 +73,27 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/80 backdrop-blur-md animate-fade-in">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/70 dark:bg-slate-950/80 backdrop-blur-md animate-fade-in">
       <div className="absolute inset-0" onClick={onClose}></div>
 
       <div className={`fixed inset-y-0 ${isEn ? 'right-0 pr-0 sm:pr-10' : 'left-0 pl-0 sm:pl-10'} max-w-full flex`}>
-        <div className="w-screen max-w-md bg-slate-900 border-x border-cyan-500/20 shadow-2xl flex flex-col">
+        <div className="w-screen max-w-md bg-white dark:bg-slate-900 border-x border-slate-200 dark:border-cyan-500/20 shadow-2xl flex flex-col transition-colors">
           
           {/* Cart Drawer Header */}
-          <div className="p-6 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+          <div className="p-6 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+              <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-400">
                 <ShoppingBag className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="font-heading font-extrabold text-lg text-white">{t('cartTitle')}</h2>
-                <span className="text-xs text-slate-400 font-mono">{t('cartCountItems', { count: cartItems.length })}</span>
+                <h2 className="font-heading font-extrabold text-lg text-slate-900 dark:text-white">{t('cartTitle')}</h2>
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">{t('cartCountItems', { count: cartItems.length })}</span>
               </div>
             </div>
 
             <button
               onClick={onClose}
-              className="p-2 rounded-full bg-slate-900 text-slate-400 hover:text-white transition"
+              className="p-2 rounded-full bg-slate-200 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition"
             >
               <X className="h-5 w-5" />
             </button>
@@ -102,16 +102,16 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
           {/* Cart Items List */}
           <div className="flex-1 overflow-y-auto p-6 space-y-4">
             {cartItems.length === 0 ? (
-              <div className="text-center py-16 text-slate-500">
-                <ShoppingBag className="h-12 w-12 mx-auto mb-3 opacity-30 text-cyan-400" />
-                <p className="text-sm font-medium">{t('cartEmpty')}</p>
-                <p className="text-xs mt-1 text-slate-600">{t('cartEmptySub')}</p>
+              <div className="text-center py-16 text-slate-400 dark:text-slate-500">
+                <ShoppingBag className="h-12 w-12 mx-auto mb-3 opacity-30 text-cyan-500 dark:text-cyan-400" />
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-400">{t('cartEmpty')}</p>
+                <p className="text-xs mt-1 text-slate-500 dark:text-slate-600">{t('cartEmptySub')}</p>
               </div>
             ) : (
               <>
-                <div className="flex items-center justify-between text-xs text-slate-400 pb-2 border-b border-slate-800">
+                <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pb-2 border-b border-slate-100 dark:border-slate-800">
                   <span>{t('selectedItems')}</span>
-                  <button onClick={onClearCart} className="text-cyan-400 hover:underline text-[11px]">
+                  <button onClick={onClearCart} className="text-cyan-600 dark:text-cyan-400 hover:underline text-[11px]">
                     {t('clearCart')}
                   </button>
                 </div>
@@ -124,18 +124,18 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
                   const categoryName = isEn && item.categoryNameEn ? item.categoryNameEn : item.categoryName;
 
                   return (
-                    <div key={item.id} className="flex flex-col p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 gap-3">
+                    <div key={item.id} className="flex flex-col p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 gap-3 shadow-sm">
                       <div className="flex items-center justify-between gap-3">
-                        <img src={item.image} alt={itemTitle} className="w-12 h-12 rounded-xl object-cover border border-slate-800 shrink-0" />
+                        <img src={item.image} alt={itemTitle} className="w-12 h-12 rounded-xl object-cover border border-slate-200 dark:border-slate-800 shrink-0" />
                         
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-xs font-bold text-slate-200 truncate">{itemTitle}</h4>
-                          <span className="text-[10px] text-cyan-400 font-mono">{categoryName}</span>
+                          <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{itemTitle}</h4>
+                          <span className="text-[10px] text-cyan-600 dark:text-cyan-400 font-mono">{categoryName}</span>
                         </div>
 
                         <button
                           onClick={() => onRemoveFromCart(item.id)}
-                          className="p-1.5 text-slate-500 hover:text-red-400 transition"
+                          className="p-1.5 text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition"
                           title="Remove item"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -143,40 +143,40 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
                       </div>
 
                       {/* Price & Workstation Controls (ONLY FOR REVIT PLUGINS) */}
-                      <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between gap-2">
+                      <div className="pt-2 border-t border-slate-200 dark:border-slate-800/60 flex items-center justify-between gap-2">
                         {isPlugin ? (
                           <div className="flex items-center gap-2">
-                            <span className="text-[11px] text-slate-400">{t('workstations')}:</span>
-                            <div className="flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5">
+                            <span className="text-[11px] text-slate-500 dark:text-slate-400">{t('workstations')}:</span>
+                            <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-0.5 shadow-sm">
                               <button
                                 onClick={() => onUpdateQuantity(item.id, qty - 1)}
-                                className="w-6 h-6 rounded bg-slate-950 text-slate-300 hover:text-white flex items-center justify-center text-xs font-bold transition"
+                                className="w-6 h-6 rounded bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center justify-center text-xs font-bold transition"
                               >
                                 -
                               </button>
-                              <span className="w-7 text-center text-xs font-mono font-bold text-cyan-300">{qty}</span>
+                              <span className="w-7 text-center text-xs font-mono font-bold text-cyan-600 dark:text-cyan-300">{qty}</span>
                               <button
                                 onClick={() => onUpdateQuantity(item.id, qty + 1)}
-                                className="w-6 h-6 rounded bg-slate-950 text-slate-300 hover:text-white flex items-center justify-center text-xs font-bold transition"
+                                className="w-6 h-6 rounded bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center justify-center text-xs font-bold transition"
                               >
                                 +
                               </button>
                             </div>
                           </div>
                         ) : (
-                          <span className="text-[11px] text-slate-400">
+                          <span className="text-[11px] text-slate-500 dark:text-slate-400">
                             {item.isService ? t('customServiceTag') : t('singleItem')}
                           </span>
                         )}
 
                         <div className="text-right">
                           {item.isService ? (
-                            <span className="text-xs font-bold text-cyan-400">{t('customQuote')}</span>
+                            <span className="text-xs font-bold text-cyan-600 dark:text-cyan-400">{t('customQuote')}</span>
                           ) : (
                             <div className="flex flex-col items-end">
-                              <span className="text-xs font-black text-white font-mono">{itemSubtotal} ₪</span>
+                              <span className="text-xs font-black text-slate-900 dark:text-white font-mono">{itemSubtotal} ₪</span>
                               {isPlugin && qty > 1 && (
-                                <span className="text-[9px] text-slate-400 font-mono">({item.price} ₪ {t('perWorkstation')})</span>
+                                <span className="text-[9px] text-slate-500 dark:text-slate-400 font-mono">({item.price} ₪ {t('perWorkstation')})</span>
                               )}
                             </div>
                           )}
@@ -188,15 +188,15 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
                 })}
 
                 {/* Customer Details Form */}
-                <div className="pt-6 border-t border-slate-800 space-y-3">
-                  <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">{t('customerDetailsHeader')}</h4>
+                <div className="pt-6 border-t border-slate-200 dark:border-slate-800 space-y-3">
+                  <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">{t('customerDetailsHeader')}</h4>
                   
                   <input
                     type="text"
                     placeholder={t('fullName')}
                     value={customerInfo.name}
                     onChange={(e) => setCustomerInfo({ ...customerInfo, name: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 text-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
                   />
 
                   <input
@@ -204,7 +204,7 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
                     placeholder={t('phoneWhatsapp')}
                     value={customerInfo.phone}
                     onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 text-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
                   />
 
                   <input
@@ -212,7 +212,7 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
                     placeholder={t('emailAddress')}
                     value={customerInfo.email}
                     onChange={(e) => setCustomerInfo({ ...customerInfo, email: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 text-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500"
                   />
                 </div>
               </>
@@ -221,16 +221,16 @@ ${totalFixedPrice > 0 ? `סה"כ לתשלום עבור מוצרים: ${totalFixe
 
           {/* Cart Drawer Footer */}
           {cartItems.length > 0 && (
-            <div className="p-6 bg-slate-950 border-t border-slate-800 space-y-4">
+            <div className="p-6 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 space-y-4">
               
               {/* Total Summary */}
               <div className="space-y-1.5">
-                <div className="flex items-center justify-between text-xs text-slate-400">
+                <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                   <span>{t('totalForProducts')}</span>
-                  <span className="font-mono text-white text-base font-black">{totalFixedPrice} ₪</span>
+                  <span className="font-mono text-slate-900 dark:text-white text-base font-black">{totalFixedPrice} ₪</span>
                 </div>
                 {hasServices && (
-                  <div className="text-[11px] text-cyan-400">
+                  <div className="text-[11px] text-cyan-600 dark:text-cyan-400">
                     {t('includesCustomServices')}
                   </div>
                 )}
