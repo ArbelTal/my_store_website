@@ -53,6 +53,7 @@ export default function App() {
         if (initialMatch) {
           return {
             ...savedProd,
+            image: initialMatch.image || savedProd.image,
             titleEn: initialMatch.titleEn || savedProd.titleEn || savedProd.title,
             categoryNameEn: initialMatch.categoryNameEn || savedProd.categoryNameEn || savedProd.categoryName,
             badgeEn: initialMatch.badgeEn || savedProd.badgeEn || savedProd.badge,
