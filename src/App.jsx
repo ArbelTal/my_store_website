@@ -246,7 +246,7 @@ export default function App() {
           totalResults={filteredProducts.length}
         />
 
-        {/* Product Cards Grid */}
+        {/* Product Cards Grid & Mobile Carousels */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {filteredProducts.length === 0 ? (
             <div className="text-center py-20 bg-slate-900/50 rounded-3xl border border-slate-800">
@@ -262,19 +262,94 @@ export default function App() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  lang={lang}
-                  t={t}
-                  product={product}
-                  onQuickView={(p) => setSelectedProductModal(p)}
-                  onAddToCart={(p) => handleAddToCart(p, 1)}
-                  isInCart={cartItems.some((item) => item.id === product.id)}
-                />
-              ))}
-            </div>
+            <>
+              {/* DESKTOP VIEW: Standard Grid Layout (md:grid) */}
+              <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    lang={lang}
+                    t={t}
+                    product={product}
+                    onQuickView={(p) => setSelectedProductModal(p)}
+                    onAddToCart={(p) => handleAddToCart(p, 1)}
+                    isInCart={cartItems.some((item) => item.id === product.id)}
+                  />
+                ))}
+              </div>
+
+              {/* MOBILE VIEW ONLY: Separate Swipeable Carousel for Each Category (md:hidden) */}
+              <div className="block md:hidden space-y-8">
+                {activeCategory === 'all' && !searchQuery ? (
+                  // Group by categories when "All" is active on mobile
+                  CATEGORIES.filter(c => c.id !== 'all').map((cat) => {
+                    const catProducts = products.filter(p => p.category === cat.id);
+                    if (catProducts.length === 0) return null;
+                    const catName = lang === 'en' && cat.nameEn ? cat.nameEn : cat.name;
+
+                    return (
+                      <div key={cat.id} className="space-y-3">
+                        {/* Category Section Header */}
+                        <div className="flex items-center justify-between px-1">
+                          <h3 className="text-sm font-extrabold text-white flex items-center gap-2 border-r-2 border-cyan-400 pr-2">
+                            <span>{catName}</span>
+                            <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded-full border border-cyan-800">
+                              {catProducts.length}
+                            </span>
+                          </h3>
+                          <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                            👈 {lang === 'en' ? 'Swipe' : 'החלק להתאמה'} 👉
+                          </span>
+                        </div>
+
+                        {/* Swipeable Horizontal Carousel */}
+                        <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 pt-1 px-1 scrollbar-none">
+                          {catProducts.map((product) => (
+                            <div key={product.id} className="w-[85vw] max-w-[320px] shrink-0 snap-start">
+                              <ProductCard
+                                lang={lang}
+                                t={t}
+                                product={product}
+                                onQuickView={(p) => setSelectedProductModal(p)}
+                                onAddToCart={(p) => handleAddToCart(p, 1)}
+                                isInCart={cartItems.some((item) => item.id === product.id)}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  // Single Swipeable Carousel when specific Category or Search is active on mobile
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between px-1">
+                      <span className="text-xs font-bold text-cyan-400">
+                        {t('showingResults', { count: filteredProducts.length })}
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                        👈 {lang === 'en' ? 'Swipe' : 'החלק'} 👉
+                      </span>
+                    </div>
+
+                    <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 pt-1 px-1 scrollbar-none">
+                      {filteredProducts.map((product) => (
+                        <div key={product.id} className="w-[85vw] max-w-[320px] shrink-0 snap-start">
+                          <ProductCard
+                            lang={lang}
+                            t={t}
+                            product={product}
+                            onQuickView={(p) => setSelectedProductModal(p)}
+                            onAddToCart={(p) => handleAddToCart(p, 1)}
+                            isInCart={cartItems.some((item) => item.id === product.id)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
           )}
         </div>
 
