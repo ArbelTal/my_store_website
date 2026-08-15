@@ -7,7 +7,7 @@ export default function CustomServiceForm({ lang, t, settings }) {
     name: '',
     phone: '',
     email: '',
-    revitVersion: '2025',
+    revitVersion: '2027',
     details: '',
   });
 
