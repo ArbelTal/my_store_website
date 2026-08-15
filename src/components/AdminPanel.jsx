@@ -641,6 +641,58 @@ export default function AdminPanel({
                     </div>
                   </div>
 
+                  {/* Badge / Tag Editing Section */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                    <div>
+                      <label className="block text-xs font-bold text-amber-400 mb-1">{isEn ? 'Badge / Tag (Hebrew)' : 'תווית/תגית מוצר (בעברית)'}</label>
+                      <input
+                        type="text"
+                        placeholder="כגון: שירות פרימיום / פופולרי ביותר"
+                        value={formData.badge || ''}
+                        onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
+                        className="w-full bg-slate-900 border border-slate-800 text-slate-100 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-amber-400 mb-1">{isEn ? 'Badge / Tag (English)' : 'תווית/תגית מוצר (באנגלית)'}</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Premium Service / Most Popular"
+                        value={formData.badgeEn || ''}
+                        onChange={(e) => setFormData({ ...formData, badgeEn: e.target.value })}
+                        className="w-full bg-slate-900 border border-slate-800 text-slate-100 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+
+                    {/* Quick Badge Presets */}
+                    <div className="sm:col-span-2 flex flex-wrap items-center gap-1.5 pt-1">
+                      <span className="text-[11px] text-slate-400">{isEn ? 'Quick presets:' : 'בחירה מהירה תווית:'}</span>
+                      {[
+                        { he: 'שירות פרימיום', en: 'Premium Service' },
+                        { he: 'פופולרי ביותר', en: 'Most Popular' },
+                        { he: 'חדש', en: 'New' },
+                        { he: 'BIM Standard', en: 'BIM Standard' },
+                        { he: '2D/3D Smart', en: '2D/3D Smart' },
+                        { he: 'אוטומציה חכמה', en: 'Smart Automation' },
+                        { he: '', en: '' }
+                      ].map((item, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, badge: item.he, badgeEn: item.en })}
+                          className={`text-[10px] px-2.5 py-1 rounded-lg border transition ${
+                            formData.badge === item.he
+                              ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 font-bold'
+                              : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
+                          }`}
+                        >
+                          {item.he || (isEn ? 'No Badge' : 'ללא תווית')}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   {/* Revit Supported Versions Edit Section */}
                   <div className="p-3.5 rounded-xl bg-slate-950/80 border border-cyan-500/20 space-y-2">
                     <label className="block text-xs font-bold text-cyan-400">
